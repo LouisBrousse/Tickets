@@ -1,0 +1,8 @@
+
+Pour le backend et vérifier si ça marche. Faire les commande test sur bash :
+- requête get sur /api/ticket
+curl http://localhost:3000/api/ticket
+
+- requête post sur /api/ticket
+curl -X POST -H "Content-Type: application/json" -d '{"email": "louis@mial.fr", "category": "furniture", "description": "blabla", "priority": "high"}' http://localhost:3000/api/ticket
+
