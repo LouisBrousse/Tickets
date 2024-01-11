@@ -15,7 +15,7 @@ app.get('/api/ticket', async (req, res) => {
  app.get('/api/ticket/:id', async (req, res) => {
     const objetId = parseInt(req.params.id);
    
-    const ticket = await prisma.ticket.findUnique({
+    const ticket = await prisma.objet.findUnique({
         where: { id: objetId },
       });
     res.json(ticket);
