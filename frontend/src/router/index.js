@@ -13,7 +13,7 @@ const routes = [
 
    {
       path: '/recap/:ticketId',
-      component: () => import('/src/views/Recap.vue'),
+      component: () => import('/src/views/ticketRecap.vue'),
       props: true,
    },
 
