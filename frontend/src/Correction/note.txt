@@ -6,3 +6,5 @@ curl http://localhost:3000/api/ticket
 - requête post sur /api/ticket
 curl -X POST -H "Content-Type: application/json" -d '{"email": "louis@mial.fr", "category": "furniture", "description": "blabla", "priority": "high"}' http://localhost:3000/api/ticket
 
+- on a essayé de faire des requêtes sur la db avec postgresql avec bash. <SELECT * from Ticket;> ou <SELECT * from ticket;> ne fonctionne pas à cause de la majuscule de Ticket pendant la création de la base dans le schéma de prisma.
+pour que ça fonctionne : <SELECT * from "Ticket";> les "" rendent le string "case sensitive"...
