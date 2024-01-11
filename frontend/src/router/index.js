@@ -17,6 +17,12 @@ const routes = [
       props: true,
    },
 
+   
+   {
+      path: '/ticketslist',
+      component: Ticketslist,
+   },
+
 ]
 
 const router = createRouter({
