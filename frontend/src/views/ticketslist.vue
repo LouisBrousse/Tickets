@@ -4,7 +4,7 @@
        <div class="flex p-4">
         <div class=  "basis 1/2">
          
-         <div id="card" v-for="ticket in listetickets" >
+         <div id="card" v-for="ticket in allTickets" >
             <TicketCard :ticketId="ticket.id" @click="onClick(ticket.id)" :selected="ticket.id == selectedTicketId"> </TicketCard>
          </div>
              
@@ -22,6 +22,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import TicketCard from '/src/components/TicketCard.vue'
 import router from '/src/router'
+import { allTickets } from '../use/useTickets'
 
 const listetickets = ref([])
 
@@ -29,11 +30,10 @@ const route = useRoute()
 const selectedTicketId = ref(route.params.ticketId)
 
 
-onMounted(async () => {
-    const response = await fetch(`/api/ticket`)
-    listetickets.value= await response.json()
-    console.log("liste", listetickets)
-})
+// onMounted(async () => {
+listetickets.value = allTickets
+//     console.log("All tickets loaded")
+// })
 
 const onClick = (ticketId) => {
   selectedTicketId.value = ticketId

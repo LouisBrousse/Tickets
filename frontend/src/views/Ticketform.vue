@@ -72,6 +72,7 @@
 import {ref} from 'vue'
 import { computed } from "vue"
 import router from '../router'
+import { addTicket } from '../use/useTickets';
 
 
 const OPTIONS = [
@@ -107,21 +108,16 @@ const isFormValid = computed(()=> isDescriptionValid.value && isEmailValid.value
 
 const submitForm = async () => {
     console.log('Form submitted with data:', formData.value)
-    const response = await fetch('/api/ticket', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData.value),
-    });
+    
+    const response = await addTicket(formData)
 
     // if (!response.ok) {
     //   throw new Error(`HTTP error! Status: ${response.status}`);
     // }
-        const createdTicket= await response.json()
-        console.log('createdTicket:', createdTicket)
-        console.log('createdTicket ID', createdTicket.id)
-        router.push(`/recap/${createdTicket.id}`);
+        
+
+        
+        router.push(`/recap/${response.id}`);
 }
 
 

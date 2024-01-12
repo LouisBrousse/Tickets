@@ -1,6 +1,6 @@
 <template>
         
-<div class="max-w-md rounded overflow-hidden shadow-lg bg-white" :class="{'bg-gray-200': selected}">
+<div class="max-w-md rounded-lg overflow-hidden shadow-lg bg-white m-4" :class="{'bg-gray-200': selected}">
                 <div id="category" class="text-left px-2 py-2">
                 <span class="inline-block rounded-full px-2 py-1 text-sm font-semibold mr-2 w-28 text-center"
                       :class="{
