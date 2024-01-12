@@ -39,6 +39,7 @@
  <script setup>
 import { ref, onMounted } from 'vue'
 import { format } from 'date-fns';
+
 import { CATEGORIES, PRIORITIES } from '../constants'
 
 const listetickets = ref({})
