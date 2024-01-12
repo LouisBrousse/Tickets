@@ -2,6 +2,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import Ticketform from '/src/views/Ticketform.vue'
+import Ticketslist from '/src/views/ticketslist.vue'
 
 const routes = [
 
