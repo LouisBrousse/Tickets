@@ -31,6 +31,7 @@ export const allTickets = computed(()=>{
     return id2ticket
 })
 
+
 export async function addTicket(formData){
     console.log('formData :', formData.value)
     const response = await fetch('/api/ticket', {
