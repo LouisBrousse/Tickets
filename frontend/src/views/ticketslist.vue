@@ -18,27 +18,26 @@
   </template>
   
   <script setup>
- import { ref, onMounted } from 'vue'
- import { useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import TicketCard from '/src/components/TicketCard.vue'
+import router from '/src/router'
 
- import TicketCard from '/src/components/TicketCard.vue'
- import router from '/src/router'
+const listetickets = ref([])
 
- const listetickets = ref([])
+const route = useRoute()
+const selectedTicketId = ref(route.params.ticketId)
 
- const route = useRoute()
- const selectedTicketId = ref(route.params.ticketId)
 
- 
- onMounted(async () => {
-     const response = await fetch(`/api/ticket`)
-     listetickets.value= await response.json()
-     console.log("liste", listetickets)
-  })
+onMounted(async () => {
+    const response = await fetch(`/api/ticket`)
+    listetickets.value= await response.json()
+    console.log("liste", listetickets)
+})
 
-  const onClick = (ticketId) => {
-   selectedTicketId.value = ticketId
-   router.push(`/tickets/${ticketId}`)
+const onClick = (ticketId) => {
+  selectedTicketId.value = ticketId
+  router.push(`/tickets/${ticketId}`)
 }
   </script>
   

@@ -30,10 +30,10 @@
   </template>
   
   <script setup>
- import { ref, onMounted, registerRuntimeCompiler,} from 'vue';
+ import { ref, onMounted} from 'vue';
  import { format } from 'date-fns';
  import { CATEGORIES, PRIORITIES } from '../constants';
- 
+ import { asyncTicket } from '../use/useTickets';
  
  
  const formatDateTime = (dateTime) => {
@@ -41,7 +41,7 @@
 
    return format(new Date(dateTime), 'dd/MM/yyyy HH:mm:ss');
  };
- 
+
 const props = defineProps({
     ticketId: {
        type: [Number, String],
@@ -56,8 +56,8 @@ const props = defineProps({
  const ticket = ref({});
 
  onMounted(async () => {
-     const response = await fetch(`/api/ticket/${props.ticketId}`)
-     ticket.value= await response.json()
-  })
-  </script>
+    ticket.value = await asyncTicket(props.ticketId)
+    console.log('ti', ticket.value)
+})
+</script>
   

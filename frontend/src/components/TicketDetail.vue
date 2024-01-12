@@ -38,8 +38,8 @@
   <script setup>
  import { ref, onMounted, watch } from 'vue'
  import { format } from 'date-fns';
- 
  import { CATEGORIES, PRIORITIES } from '../constants'
+ import { asyncTicket } from '../use/useTickets';
  
 
  
@@ -59,10 +59,9 @@
  const ticket = ref({})
 
  onMounted(async () => {
-     const response = await fetch(`/api/ticket/${props.ticketId}`)
-     ticket.value= await response.json()
-  
-  })
+    ticket.value = await asyncTicket(props.ticketId)
+    console.log('ti', ticket.value)
+})
 
   watch(() => props.ticketId, async () => {
    const response = await fetch(`/api/ticket/${props.ticketId}`)
