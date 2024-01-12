@@ -21,17 +21,17 @@ const routes = [
    
 
    {
-      path: '/ticketslist',
+      path: '/tickets',
       component: Ticketslist, 
-      // children: [
-      //    {
-      //       path: ':ticketId',
+      children: [
+         {
+            path: ':ticketId',
             
-      //       component: TicketDetail,
-      //       // component: () => import('/src/components/CityDetail.vue'),
-      //       props: true
-      //    },
-      // ],
+            // component: TicketDetail,
+            component: () => import('/src/components/TicketDetail.vue'),
+            props: true
+         },
+      ],
       
    },
 

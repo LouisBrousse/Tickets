@@ -1,6 +1,6 @@
 <template>
         
-<div class="max-w-md rounded overflow-hidden shadow-lg bg-white">
+<div class="max-w-md rounded overflow-hidden shadow-lg bg-white" :class="{'bg-gray-200': selected}">
                 <div id="category" class="text-left px-2 py-2">
                 <span class="inline-block rounded-full px-2 py-1 text-sm font-semibold mr-2 w-28 text-center"
                       :class="{
@@ -30,28 +30,34 @@
   </template>
   
   <script setup>
- import { ref, onMounted, defineProps } from 'vue';
+ import { ref, onMounted, registerRuntimeCompiler,} from 'vue';
  import { format } from 'date-fns';
  import { CATEGORIES, PRIORITIES } from '../constants';
  
- const listetickets = ref({});
+ 
  
  const formatDateTime = (dateTime) => {
+    if (!dateTime) return ''
+
    return format(new Date(dateTime), 'dd/MM/yyyy HH:mm:ss');
  };
  
- const props = defineProps({
+const props = defineProps({
     ticketId: {
        type: [Number, String],
        required: true,
     },
+    selected: {
+      type: Boolean,
+      default: false,
+   },
  })
 
+ const ticket = ref({});
+
  onMounted(async () => {
-     const response = await fetch(`/api/ticket`)
-     console.log("liste", response)
-     listetickets.value= await response.json()
-     console.log("liste", listetickets)
+     const response = await fetch(`/api/ticket/${props.ticketId}`)
+     ticket.value= await response.json()
   })
   </script>
   
