@@ -23,7 +23,6 @@ app.get('/api/ticket', async (req, res) => {
 
 app.post('/api/ticket', async (req, res) => {
     let datas = req.body
-    console.log(datas)
     const newTicket = await prisma.ticket.create({
         data: datas
     });
