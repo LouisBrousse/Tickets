@@ -109,10 +109,12 @@ const isFormValid = computed(()=> isDescriptionValid.value && isEmailValid.value
 const submitForm = async () => {
     console.log('Form submitted with data:', formData.value)
     const response = await addTicket(formData)
-    /ticketslist
+
     // if (!response.ok) {
     //   throw new Error(`HTTP error! Status: ${response.status}`);
     // }
+        
+
         
         router.push(`/recap/${response.id}`);
 }
@@ -129,7 +131,7 @@ const clearDB = async () => {
     });
     
     const responseData = await response.json();
-    console.log(responseData)
+    
 }
 
 // ___________________________________________
