@@ -1,6 +1,6 @@
 <template>
         
-<div class="max-w-md rounded-lg overflow-hidden shadow-lg bg-white m-4" :class="{'bg-gray-200': selected}">
+<div class="max-w-md rounded-lg overflow-hidden shadow-lg m-4 cursor-pointer" :class="{'bg-gray-200': selected}">
                 <div id="category" class="text-left px-2 py-2">
                 <span class="inline-block rounded-full px-2 py-1 text-sm font-semibold mr-2 w-28 text-center"
                       :class="{
@@ -30,7 +30,7 @@
   </template>
   
   <script setup>
- import { ref, onMounted} from 'vue';
+ import { ref, watch} from 'vue';
  import { format } from 'date-fns';
  import { CATEGORIES, PRIORITIES } from '../constants';
  import { asyncTicket } from '../use/useTickets';
@@ -55,9 +55,17 @@ const props = defineProps({
 
  const ticket = ref({});
 
- onMounted(async () => {
-    ticket.value = await asyncTicket(props.ticketId)
-    console.log('ti', ticket.value)
+//  onMounted(async () => {
+//     ticket.value = await asyncTicket(props.ticketId)
+//     console.log('ti', ticket.value)
+// })
+
+
+watch(() => props.ticketId, async () => {
+   ticket.value = await asyncTicket(props.ticketId)
+}, {
+   immediate: true
 })
+
 </script>
   
