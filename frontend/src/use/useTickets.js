@@ -2,8 +2,6 @@ import { ref, computed } from 'vue'
 
 const id2ticket = ref ({})
 
-
-
 export async function asyncTicket(ticketid){
     if (id2ticket[ticketid]) {
         return id2ticket.value[ticketid];
@@ -22,13 +20,15 @@ export const allTickets = computed(()=>{
     if(ticketlistReady.value) {
         return Object.values(id2ticket.value)
     }
-    fetch('/api/ticket').then(response=>response.json()) .then(ticketlist =>{
+    fetch('/api/ticket')
+        .then(response=>response.json()) 
+        .then(ticketlist =>{
         for (const ticket of ticketlist){
             id2ticket.value[ticket.id] = ticket
         }
         ticketlistReady.value = true
     })
-    return id2ticket
+    return null
 })
 
 
