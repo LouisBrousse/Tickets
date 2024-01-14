@@ -1,51 +1,71 @@
 import { ref, computed } from 'vue'
 
-const id2ticket = ref ({})
+// Reactive reference to store ticket data based on ticket IDs
+const id2ticket = ref({})
 
-export async function asyncTicket(ticketid){
-    if (id2ticket[ticketid]) {
+// Function to asynchronously fetch ticket data by ticket ID
+export async function asyncTicket(ticketid) {
+    // If ticket data already exists in the reference, return it
+    if (id2ticket.value[ticketid]) {
         return id2ticket.value[ticketid];
-    }else{
+    } else {
+        // Otherwise, fetch the ticket data from the API
         const response = await fetch(`/api/ticket/${ticketid}`)
         const ticket = await response.json()
+        // Store the fetched ticket data in the reference for future use
         id2ticket.value[ticket.id] = ticket;
         return ticket
     }
 }
 
-
+// Reactive reference to indicate whether the ticket list data is ready
 const ticketlistReady = ref(false)
 
-export const allTickets = computed(()=>{
-    if(ticketlistReady.value) {
+// Computed property to get all tickets
+export const allTickets = computed(() => {
+    // If the ticket list data is ready, return all tickets as an array
+    if (ticketlistReady.value) {
         return Object.values(id2ticket.value)
     }
+    
+    // If the ticket list data is not ready, fetch it from the API
     fetch('/api/ticket')
-        .then(response=>response.json()) 
-        .then(ticketlist =>{
-        for (const ticket of ticketlist){
-            id2ticket.value[ticket.id] = ticket
-        }
-        ticketlistReady.value = true
-    })
+        .then(response => response.json())
+        .then(ticketlist => {
+            // Populate the id2ticket reference with fetched ticket data
+            for (const ticket of ticketlist) {
+                id2ticket.value[ticket.id] = ticket
+            }
+            // Set ticketlistReady to true to indicate that the data is ready
+            ticketlistReady.value = true
+        })
+    // Return null while waiting for the data to be fetched
     return null
 })
 
-
-export async function addTicket(formData){
-    console.log('formData :', formData.value)
+// Function to add a new ticket using the provided form data
+export async function addTicket(formData) {
+    // Log the form data to the console
+    console.log('formData:', formData.value)
+    
+    // Send a POST request to the API to create a new ticket
     const response = await fetch('/api/ticket', {
         method: 'POST',
         headers: {
-        'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData.value),
     });
-    const createdTicket= await response.json()
-    console.log('createdTicket :', createdTicket)
 
+    // Parse the response to get the created ticket data
+    const createdTicket = await response.json()
+
+    // Log the created ticket data to the console
+    console.log('createdTicket:', createdTicket)
+
+    // Store the created ticket data in the id2ticket reference for future use
     id2ticket.value[createdTicket.id] = createdTicket;
-    
+
+    // Return the created ticket data
     return createdTicket;
-    
 }

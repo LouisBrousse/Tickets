@@ -1,4 +1,31 @@
 
+<!--
+Ce composant Vue.js représente un formulaire de tickets avec des champs pour l'e-mail, la catégorie,
+la description et la priorité. Il inclut également des fonctionnalités telles que la validation du formulaire,
+le remplissage aléatoire du formulaire, la soumission du formulaire, la suppression de la base de données, etc.
+
+Propriétés:
+  - Aucune propriété n'est utilisée dans ce composant.
+
+Événements personnalisés:
+  - Aucun événement personnalisé n'est émis par ce composant.
+
+Slots:
+  - Aucun slot n'est utilisé dans ce composant.
+
+Méthodes:
+  - `submitForm`: Fonction appelée lors de la soumission du formulaire.
+  - `clearDB`: Fonction appelée pour effacer la base de données.
+  - `getRandomOption`: Fonction pour obtenir une option de catégorie de manière aléatoire.
+  - `getRandomOptionprio`: Fonction pour obtenir une option de priorité de manière aléatoire.
+  - `getRandomEmail`: Fonction pour générer une adresse e-mail aléatoire.
+  - `getRandomLoremIpsum`: Fonction pour générer du texte "Lorem Ipsum" de manière aléatoire.
+  - `fillFormRandomly`: Fonction pour remplir le formulaire avec des valeurs aléatoires.
+  - `clearForm`: Fonction pour effacer les valeurs du formulaire.
+
+Composants enfants:
+  - Aucun composant enfant n'est utilisé dans ce composant.
+-->
 
 <template>
   
