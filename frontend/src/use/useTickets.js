@@ -1,15 +1,21 @@
+import { useLocalStorage } from '@vueuse/core'
 import { ref, computed } from 'vue'
 
+
 // Reactive reference to store ticket data based on ticket IDs
-const id2ticket = ref({})
+const id2ticket = useLocalStorage('id2ticket', {});
+
+//Part 7
+const ticketListComplete = useLocalStorage('ticket-list-complete', false);
+
+
 
 // Reactive reference to indicate whether the ticket list data is ready
-const ticketlistReady = ref(false)
 
 // Computed property to get all tickets
 export const allTickets = computed(() => {
     // If the ticket list data is ready, return all tickets as an array
-    if (ticketlistReady.value) {
+    if (ticketListComplete.value) {
         return Object.values(id2ticket.value)
     }
     
@@ -21,12 +27,13 @@ export const allTickets = computed(() => {
             for (const ticket of ticketlist) {
                 id2ticket.value[ticket.id] = ticket
             }
-            // Set ticketlistReady to true to indicate that the data is ready
-            ticketlistReady.value = true
+            // Set ticketListComplete to true to indicate that the data is ready
+            ticketListComplete.value = true
         })
     // Return null while waiting for the data to be fetched
     return []
 })
+
 
 // Function to asynchronously fetch ticket data by ticket ID
 export async function asyncTicket(ticketid) {                   
@@ -39,8 +46,9 @@ export async function asyncTicket(ticketid) {
         const ticket = await response.json()
         // Store the fetched ticket data in the reference for future use
         id2ticket.value[ticket.id] = ticket;
-        return ticket
+        
     }
+    return id2ticket.value[ticketId]
 }
 
 // Function to add a new ticket using the provided form data
@@ -66,10 +74,28 @@ export async function addTicket(formData) {
 }
 
 
-// export const ticketOfId = computed(() => (id) => {
-//     const ticket = id2ticket.value[id]
-//     if (ticket) return ticket
-//     fetch(`/api/ticket/${id}`).then(response => response.json()).then(ticket => {
-//        id2ticket.value[ticket.id] = ticket
-//     })
-//  })
+export const ticketOfId = computed(() => (id) => {
+    const ticket = id2ticket.value[id]
+    if (ticket) return ticket
+    fetch(`/api/ticket/${id}`).then(response => response.json()).then(ticket => {
+       id2ticket.value[ticket.id] = ticket
+    })
+ })
+
+
+//Part8
+// fonction de triage
+export const allSortedTicket = computed(()=> {
+    return allTickets.value.sort((ticket1, ticket2) => {                        //voir la 
+        //return new Date (ticket1.created_at) - new Date (ticket2.created_at)
+        if (ticket1.created_at < ticket2.created_at) return -1
+        if (ticket1.created_at > ticket2.created_at) return 1
+        return 0
+    })
+})
+
+// fonction de filtrage
+
+// export const allFilteredTicket = computed(()=> {
+    
+// })

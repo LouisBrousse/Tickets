@@ -20,7 +20,7 @@
 
     <!-- Ticket Date -->
     <div id="date" class="px-6 py-4">
-      <div class="text-base mb-2">Date : <a>{{ formatDateTime(ticket.created_at) }}</a></div>
+      <div class="text-base mb-2">Date : <a>{{ formatDate(ticket.created_at) }}</a></div>
     </div>
 
     <!-- Priority Information -->
@@ -40,16 +40,10 @@
 </template>
 
 <script setup>
-import { ref, defineProps, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { format } from 'date-fns';
 import { CATEGORIES, PRIORITIES } from '../constants';
-import { asyncTicket } from '../use/useTickets';
-
-// Function to format date and time
-const formatDateTime = (dateTime) => {
-  if (!dateTime) return '';
-  return format(new Date(dateTime), 'dd/MM/yyyy HH:mm:ss');
-};
+import { asyncTicket, ticketOfId } from '../use/useTickets';
 
 // Props definition
 const props = defineProps({
@@ -64,14 +58,21 @@ const props = defineProps({
 });
 
 // Ticket data reference 
-const ticket = ref({});
+const ticket = ticketOfId.value(props.ticketId);
 
-// Watch for changes in ticketId prop and update ticket details // 1ere Solution
-watch(() => props.ticketId, async () => {
-  ticket.value = await asyncTicket(props.ticketId);
-}, {
-  immediate: true
-});
+// // Watch for changes in ticketId prop and update ticket details // 1ere Solution
+// watch(() => props.ticketId, async () => {
+//   ticket.value = await asyncTicket(props.ticketId);
+// }, {
+//   immediate: true
+// });
+
+// Function to format date and time
+
+function formatDate(isoDate) {
+   if (!isoDate) return ''
+   return format(new Date(isoDate), 'dd/MM/yyyy HH:mm')
+}
 
 // const ticket = ticketOfId.value(props.ticketId) // 2eme solution pour le code dessus voir dans use la fonction ticketOfId
 </script>
