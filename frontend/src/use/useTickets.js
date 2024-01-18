@@ -1,5 +1,6 @@
 import { useLocalStorage } from '@vueuse/core'
 import { ref, computed } from 'vue'
+import { CATEGORIES, PRIORITIES } from '../constants';
 
 
 // Reactive reference to store ticket data based on ticket IDs
@@ -95,6 +96,11 @@ export const allSortedTicket = computed(()=> {
 })
 
 // fonction de filtrage
+
+export const allfilteredTicket = computed(()=> {
+    
+    
+})
 
 // export const allFilteredTicket = computed(()=> {
     

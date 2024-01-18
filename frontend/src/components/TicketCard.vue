@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, computed } from 'vue';
 import { format } from 'date-fns';
 import { CATEGORIES, PRIORITIES } from '../constants';
 import { asyncTicket, ticketOfId } from '../use/useTickets';
@@ -58,14 +58,7 @@ const props = defineProps({
 });
 
 // Ticket data reference 
-const ticket = ticketOfId.value(props.ticketId);
-
-// // Watch for changes in ticketId prop and update ticket details // 1ere Solution
-// watch(() => props.ticketId, async () => {
-//   ticket.value = await asyncTicket(props.ticketId);
-// }, {
-//   immediate: true
-// });
+const ticket = computed(()=> ticketOfId.value(props.ticketId));
 
 // Function to format date and time
 
