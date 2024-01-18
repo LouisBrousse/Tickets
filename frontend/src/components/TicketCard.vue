@@ -63,13 +63,15 @@ const props = defineProps({
   },
 });
 
-// Ticket data reference
+// Ticket data reference 
 const ticket = ref({});
 
-// Watch for changes in ticketId prop and update ticket details
+// Watch for changes in ticketId prop and update ticket details // 1ere Solution
 watch(() => props.ticketId, async () => {
   ticket.value = await asyncTicket(props.ticketId);
 }, {
   immediate: true
 });
+
+// const ticket = ticketOfId.value(props.ticketId) // 2eme solution pour le code dessus voir dans use la fonction ticketOfId
 </script>
