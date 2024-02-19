@@ -1,16 +1,17 @@
 <template>
+   <Menu></Menu>
   <!-- Container for the entire component -->
-  <div class="bg-gray-100 h-screen">
-    <div class="flex mb-3">
+  <div class="bg-gray-100 h-screen m-4">
+    <div id="Filter" class="flex mb-3">
          <span class="mr-2 font-bold">Priorités :</span>
          <ul class="flex space-x-1">
-            <li><a href="#" @click="togglePriority('low')" :class="{ 'opacity-20': !filteredPriorities.has('low') }" class="bg-yellow-200 rounded-full px-3 py-2 text-sm font-semibold text-gray-700">
+            <li><a href="#" @click="togglePriority('low')" :class="{ 'opacity-20': !filteredPriorities.has('low') }" class="bg-green-500 rounded-full px-3 py-2 text-sm font-semibold text-gray-700">
                {{ PRIORITIES['low'] }}
             </a></li>
-            <li><a href="#" @click="togglePriority('normal')" :class="{ 'opacity-20': !filteredPriorities.has('normal') }" class="bg-orange-200 rounded-full px-3 py-2 text-sm font-semibold text-gray-700">
+            <li><a href="#" @click="togglePriority('normal')" :class="{ 'opacity-20': !filteredPriorities.has('normal') }" class="bg-orange-500 rounded-full px-3 py-2 text-sm font-semibold text-gray-700">
                {{ PRIORITIES['normal'] }}
             </a></li>
-            <li><a href="#" @click="togglePriority('high')" :class="{ 'opacity-20': !filteredPriorities.has('high') }" class="bg-red-200 rounded-full px-3 py-2 text-sm font-semibold text-gray-700">
+            <li><a href="#" @click="togglePriority('high')" :class="{ 'opacity-20': !filteredPriorities.has('high') }" class="bg-red-500 rounded-full px-3 py-2 text-sm font-semibold text-gray-700">
                {{ PRIORITIES['high'] }}
             </a></li>
          </ul>
@@ -26,7 +27,9 @@
                {{ CATEGORIES['other'] }}
             </a></li>
          </ul>
-      </div>    
+
+
+    </div>     
     
       <!-- Title of the ticket list -->
       <h1 class="text-4xl font-bold mb-8 text-gray-800 text-center p-8">Liste des tickets</h1>
@@ -54,11 +57,10 @@
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import TicketCard from '/src/components/TicketCard.vue'
+import Menu from '../components/Menu.vue'
 import router from '/src/router'
 import { PRIORITIES, CATEGORIES } from '../constants'
 import { allTickets } from '../use/useTickets'
-
-
 
 
 // Reference for the current route
@@ -67,11 +69,10 @@ const route = useRoute();
 // Reference for the selected ticket ID
 const selectedTicketId = ref(route.params.ticketId)
 
-
-
 // Function to handle click events on ticket cards
 const onClick = (ticketId) => {
   selectedTicketId.value = ticketId
+  console.log('selectedTicketId :', selectedTicketId.value)
   router.push(`/tickets/${ticketId}`)
 
 }
@@ -93,11 +94,11 @@ const toggleCategory = (category) => {
    } else {
       filteredCategories.value.add(category)
    }
-   router.push(`/tickets`)
+   router.push(`/tickets`) 
 }
 
-
 const visibleTickets = computed(() => allTickets.value
+
    // filter list by priorities
    .filter(ticket => filteredPriorities.value.has(ticket.priority))
    // filter list by categories
@@ -109,6 +110,7 @@ const visibleTickets = computed(() => allTickets.value
       if (ticket1.created_at > ticket2.created_at) return 1
       return 0
    })
+   
 )
 
 </script>

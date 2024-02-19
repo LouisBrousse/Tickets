@@ -6,9 +6,9 @@
       <span
         class="inline-block rounded-full px-2 py-1 text-sm font-semibold mr-2 w-28 text-center"
         :class="{
-          'bg-yellow-200': ticket.category === 'furniture',
-          'bg-orange-200 ': ticket.category === 'computer',
-          'bg-purple-200': ticket.category === 'other'
+          'bg-gray-200': ticket.category === 'furniture',
+          'bg-gray-300': ticket.category === 'computer',
+          'bg-gray-400': ticket.category === 'other',
         }"
       >
         {{ CATEGORIES[ticket.category] }}
@@ -28,9 +28,9 @@
       <span
         class="inline-block rounded-full px-2 py-1 text-sm font-semibold mr-2 w-28 text-center"
         :class="{
-          'bg-blue-700 text-green-200': ticket.priority === 'low',
-          'bg-green-500 text-green-100': ticket.priority === 'normal',
-          'bg-red-700 text-red-200': ticket.priority === 'high'
+          'bg-green-500': ticket.priority === 'low',
+          'bg-orange-500': ticket.priority === 'normal',
+          'bg-red-500': ticket.priority === 'high'
         }"
       >
         {{ PRIORITIES[ticket.priority] }}

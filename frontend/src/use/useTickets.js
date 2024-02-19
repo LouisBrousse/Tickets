@@ -1,6 +1,5 @@
 import { useLocalStorage } from '@vueuse/core'
 import { ref, computed } from 'vue'
-import { CATEGORIES, PRIORITIES } from '../constants';
 
 
 // Reactive reference to store ticket data based on ticket IDs
@@ -8,8 +7,6 @@ const id2ticket = useLocalStorage('id2ticket', {});
 
 //Part 7
 const ticketListComplete = useLocalStorage('ticket-list-complete', false);
-
-
 
 // Reactive reference to indicate whether the ticket list data is ready
 
@@ -49,14 +46,13 @@ export async function asyncTicket(ticketid) {
         id2ticket.value[ticket.id] = ticket;
         
     }
-    return id2ticket.value[ticketId]
+    return id2ticket.value[ticketid]
 }
 
-// Function to add a new ticket using the provided form data
 export async function addTicket(formData) {
- 
+    console.log('addTicket')
     // Send a POST request to the API to create a new ticket
-    const response = await fetch('/api/ticket', {
+    const response = await fetch("/api/ticket", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -66,7 +62,7 @@ export async function addTicket(formData) {
 
     // Parse the response to get the created ticket data
     const createdTicket = await response.json()
-
+    console.log('ticket', createdTicket)
     // Store the created ticket data in the id2ticket reference for future use
     id2ticket.value[createdTicket.id] = createdTicket;
 
@@ -95,13 +91,18 @@ export const allSortedTicket = computed(()=> {
     })
 })
 
-// fonction de filtrage
+ 
 
-export const allfilteredTicket = computed(()=> {
-    
-    
-})
-
-// export const allFilteredTicket = computed(()=> {
-    
-// })
+export const deleteDb = async () => {
+    const response = fetch('/api/ticketsup')
+        .then(response => response.json())
+        .then(ticketlist => {
+            // Remplacer complètement id2ticket avec les nouveaux tickets
+            id2ticket.value = {};
+            for (const ticket of ticketlist) {
+                id2ticket.value[ticket.id] = ticket;
+            }
+            // Marquer la liste des tickets comme complète
+            ticketListComplete.value = true;
+        });
+}
