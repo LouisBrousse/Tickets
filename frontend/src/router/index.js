@@ -1,50 +1,54 @@
+import { createRouter, createWebHistory } from "vue-router";
 
-import { createRouter, createWebHistory } from 'vue-router'
-
-import Ticketform from '/src/views/Ticketform.vue'
-import Ticketslist2 from '/src/views/ticketslist2.vue'
-import Ticketslist from '/src/views/ticketslist.vue'
-import TicketCard from '/src/components/TicketCard.vue'
+import Ticketform from "/src/views/ticketForm.vue";
+import Ticketslist from "/src/views/ticketsList.vue";
+import signin from "/src/views/signIn.vue";
+import Welcomepage from "/src/views/welcome.vue";
+import { authGuard } from "../_helpers/auth-gard";
 
 const routes = [
+  {
+    path: "/",
+    component: Welcomepage,
+  },
 
-   {
-      path: '/',
-      component: Ticketform,
-   },
+  {
+    path: "/signin",
+    component: signin,
 
-   {
-      path: '/recap/:ticketId',
-      component: () => import('/src/views/ticketRecap.vue'),
-      props: true,
-   },
-   
+  },
 
-   {
-      path: '/tickets',
-      component: Ticketslist, 
-      children: [
-         {
-            path: ':ticketId',
-            
-            // component: TicketDetail,
-            component: () => import('/src/components/TicketDetail.vue'),
-            props: true
-         },
-      ],
-      
-   },
+  {
+    path: "/ticketForm",
+    component: Ticketform,
+    beforeEnter: authGuard
+  },
 
-   {
-      path: '/ticketslist2',
-      component: Ticketslist2,
-   },
+  {
+    path: "/recap/:ticketId",
+    component: () => import("/src/views/ticketRecap.vue"),
+    props: true,
+    beforeEnter: authGuard
+  },
 
-]
+  {
+    path: "/tickets",
+    component: Ticketslist,
+    children: [
+      {
+        path: ":ticketId",
+        component: () => import("/src/components/TicketDetail.vue"),
+        props: true,
+              },
+    ],
+    beforeEnter: authGuard
+  },
+];
 
 const router = createRouter({
-   history: createWebHistory('/'),
-   routes,
-})
+  history: createWebHistory("/"),
+  routes,
+});
 
-export default router
+// Export the router instance for use in the Vue app.
+export default router;
