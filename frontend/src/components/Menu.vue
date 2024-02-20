@@ -1,7 +1,7 @@
 <template>
   <div class="relative bg-slate-900">
     <!-- Bouton d'icône pour afficher le menu -->
-    <button @click="toggleMenu" class="text-gray-500 focus:outline-none">
+    <button @click="toggleMenu" class="text-gray-200 focus:outline-none">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-8 w-8"
@@ -60,7 +60,7 @@
 <script setup>
 import router from "../router";
 import { ref } from "vue";
-import { vOnClickOutside } from '@vueuse/components';
+import { vOnClickOutside } from "@vueuse/components";
 
 const showMenu = ref(false);
 

@@ -12,7 +12,7 @@ export function authenticateMiddleware (req, res, next)  {
     }
 
     try {
-        const decoded = jwt.verify(token, 'adopi');
+        const decoded = jwt.verify(token, 'eureka');
         console.log('decoded: ', decoded) 
         req.user = decoded;
         console.log('decoded token', req.user)

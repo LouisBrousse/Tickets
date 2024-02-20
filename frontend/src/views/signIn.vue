@@ -40,37 +40,32 @@
 import { ref } from "vue";
 import Menu from "../components/Menu.vue";
 import router from "../router";
-import bcrypt from "bcryptjs";
+// import bcrypt from "bcryptjs";
 
 const email = ref("");
 const password = ref("");
-const passwordcrypted = bcrypt.genSalt(10, function(err, salt) {
-    bcrypt.hash(password, salt, function(err, hash) {
-        // Store hash in your password DB.
-    });
-});
-
-
-
-
 
 const submitForm = async () => {
-  //envoi des datas de connections dans le header de la requête
+  // Générer le hash du mot de passe
+  // const salt = await bcrypt.genSalt(10);
+  // const passwordHash = await bcrypt.hash(password.value, salt);
+
+  // Envoyer les données de connexion dans l'en-tête de la requête
   const response = await fetch("/api/signin", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-
     body: JSON.stringify({
-      email: email.value,
-      password: passwordcrypted.value,
+      email: email.value, 
+      password: password.value,
     }),
   });
-  //récupération de la réponse du serveur
+
+  // Récupérer la réponse du serveur
   const data = await response.json();
 
-  //gestion de la réponse
+  // Gérer la réponse
   if (data.status === "success") {
     console.log("Login successful");
     router.push("/tickets");
