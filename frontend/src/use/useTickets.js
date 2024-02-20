@@ -96,13 +96,7 @@ export const allSortedTicket = computed(()=> {
 export const deleteDb = async () => {
     const response = fetch('/api/ticketsup')
         .then(response => response.json())
-        .then(ticketlist => {
-            // Remplacer complètement id2ticket avec les nouveaux tickets
-            id2ticket.value = {};
-            for (const ticket of ticketlist) {
-                id2ticket.value[ticket.id] = ticket;
-            }
-            // Marquer la liste des tickets comme complète
-            ticketListComplete.value = true;
-        });
+       
+    allTickets();
+        
 }

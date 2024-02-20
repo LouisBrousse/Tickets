@@ -10,7 +10,7 @@ import { users } from "./userList.js";
 const app = express();
 const prisma = new PrismaClient();
 let userList = users
-// console.log('userList', userList)
+
 
 app.use(cookieParser());
 
@@ -25,18 +25,19 @@ app.use(
 app.use(express.json());
 
 app.post("/api/signin", async (req, res) => {
-  let userlogin = req.body;
-  console.log('login :', userlogin)
+  let userLogin = req.body;
+  console.log('login :', userLogin)
+  
   
   //vérif user
-  const existingUser = userList.find((user) => user.email === userlogin.email);
+  const existingUser = userList.find((user) => user.email === userLogin.email);
   
-  console.log('login', userlogin.password, 'list', existingUser.password)
+  console.log('login', userLogin.password, 'list', existingUser.password)
 
   if (existingUser) {
     //Si User, vérif du mdp
     const isPasswordMatch = await bcrypt.compare(
-      userlogin.password,
+      userLogin.password,
       existingUser.password
     );
 
@@ -56,7 +57,7 @@ app.post("/api/signin", async (req, res) => {
             "write-ticket": "all",
           },
         };
-        const secretKey = "adopi";
+        const secretKey = "eureka";
         const token = jwt.sign(payload, secretKey);
         res.cookie("access_token", token);
       } else {
@@ -69,7 +70,7 @@ app.post("/api/signin", async (req, res) => {
             "write-ticket": "none",
           },
         };
-        const secretKey = "adopi";
+        const secretKey = "eureka";
         const token = jwt.sign(payload, secretKey);
         res.cookie("access_token", token);
       }
@@ -78,7 +79,7 @@ app.post("/api/signin", async (req, res) => {
         status: "success",
         message: `Login successful, bienvenue ${existingUser.email}`,
       });
-    } else {
+    } else { 
       //Mot de passe inconu
       res.status(401).json({ status: "error", message: "Incorrect password" });
     }
@@ -90,23 +91,6 @@ app.post("/api/signin", async (req, res) => {
 
 app.use(authenticateMiddleware);
 
-// let userList = [
-//   {
-//     email: "admin@mail.fr",
-//     admin: true,
-//     password: "$2y$10$dtuvufWMwyIl8IYxKWgB7OQLAGXgO8mstZXAWRQ98rmF//8L5urNG",
-//   },
-//   {
-//     email: "jc@mail.fr",
-//     admin: false,
-//     password: "$2y$10$dtuvufWMwyIl8IYxKWgB7OQLAGXgO8mstZXAWRQ98rmF//8L5urNG",
-//   },
-//   {
-//     email: "brousselouis@hotmail.com",
-//     admin: false,
-//     password: "$2y$10$dtuvufWMwyIl8IYxKWgB7OQLAGXgO8mstZXAWRQ98rmF//8L5urNG",
-//   },
-// ];
 
 app.get("/api/ticket", async (req, res) => {
     try {
