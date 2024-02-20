@@ -33,6 +33,7 @@
           Se connecter
         </button>
       </form>
+      <a v-if="errorMessage" class="text-red-500">{{ errorMessage }}</a>
     </div>
   </div>
 </template>
@@ -44,6 +45,7 @@ import router from "../router";
 
 const email = ref("");
 const password = ref("");
+const errorMessage = ref("");
 
 const submitForm = async () => {
   // Générer le hash du mot de passe
@@ -57,7 +59,7 @@ const submitForm = async () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      email: email.value, 
+      email: email.value,
       password: password.value,
     }),
   });
@@ -71,6 +73,7 @@ const submitForm = async () => {
     router.push("/tickets");
   } else {
     console.error("Login failed:", data.message);
+    errorMessage.value = data.message
   }
 };
 </script>

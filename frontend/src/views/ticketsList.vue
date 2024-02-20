@@ -1,7 +1,7 @@
 <template>
    <Menu></Menu>
   <!-- Container for the entire component -->
-  <div class="bg-gray-100 h-screen m-4">
+  <div class="bg-gray-100 h-content p-4">
     <div id="Filter" class="flex mb-3">
          <span class="mr-2 font-bold">Priorités :</span>
          <ul class="flex space-x-1">
