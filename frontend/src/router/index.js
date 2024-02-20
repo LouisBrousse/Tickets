@@ -15,20 +15,19 @@ const routes = [
   {
     path: "/signin",
     component: signin,
-
   },
 
   {
     path: "/ticketForm",
     component: Ticketform,
-    beforeEnter: authGuard
+    beforeEnter: authGuard,
   },
 
   {
     path: "/recap/:ticketId",
     component: () => import("/src/views/ticketRecap.vue"),
     props: true,
-    beforeEnter: authGuard
+    beforeEnter: authGuard,
   },
 
   {
@@ -39,9 +38,9 @@ const routes = [
         path: ":ticketId",
         component: () => import("/src/components/TicketDetail.vue"),
         props: true,
-              },
+      },
     ],
-    beforeEnter: authGuard
+    beforeEnter: authGuard,
   },
 ];
 

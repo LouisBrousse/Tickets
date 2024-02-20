@@ -15,6 +15,7 @@
         />
       </svg>
     </button>
+    <button id="logout"></button>
 
     <!-- Menu -->
     <transition name="fade">
