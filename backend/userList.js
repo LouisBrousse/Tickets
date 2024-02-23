@@ -13,5 +13,5 @@ export const users = [
       email: "brousselouis@hotmail.com",
       admin: false,
       password: "$2y$10$FYNmWXB5kzeIp/evUY9mf.wRbt4otSqNG.uKIds7ZvYQx3SKOeZnC",
-    },
+    }, 
   ];

@@ -22,7 +22,7 @@ const routes = [
     component: Ticketform,
     beforeEnter: authGuard,
   },
-
+ 
   {
     path: "/recap/:ticketId",
     component: () => import("/src/views/ticketRecap.vue"),

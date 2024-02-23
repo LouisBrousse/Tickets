@@ -1,12 +1,12 @@
 
-export function authGuard(to, from, next){
-    let token = document.cookie
+export function authGuard() {
 
-    // console.log('auth guard : ', token);
-    
-    if (token){
-        next(); // Continue la navigation
-    } else {
-        next('/'); // Redirige vers la page d'accueil si l'utilisateur n'est pas authentifié
-    }
+  let token = document.cookie;
+
+  if (token) {
+    return true; // Utilisateur a été authentifié
+  } else {
+    // console.log("authGard no token");
+    return false; // Utilisateur non authentifié
+  }
 }

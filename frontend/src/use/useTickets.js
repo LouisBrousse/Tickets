@@ -5,15 +5,19 @@ import { ref, computed } from "vue";
 const id2ticket = useLocalStorage("id2ticket", {});
 
 //Part 7
-const ticketListComplete = useLocalStorage("ticket-list-complete", false);
+const ticketListComplete = ref(false);
 
 // Reactive reference to indicate whether the ticket list data is ready
 
 // Computed property to get all tickets
 export const allTickets = computed(() => {
+  console.log('ticketListComplete.value : ', ticketListComplete.value)
+  
   // If the ticket list data is ready, return all tickets as an array
   if (ticketListComplete.value) {
+    // console.log('test')
     return Object.values(id2ticket.value);
+    
   }
 
   // If the ticket list data is not ready, fetch it from the API
@@ -27,6 +31,8 @@ export const allTickets = computed(() => {
       // Set ticketListComplete to true to indicate that the data is ready
       ticketListComplete.value = true;
     });
+
+  console.log('id2ticket : ',id2ticket.value)
   // Return null while waiting for the data to be fetched
   return [];
 });

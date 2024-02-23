@@ -1,5 +1,5 @@
 <template>
-  <div class="relative bg-slate-900">
+  <div class="relative bg-slate-900 flex justify-between p-2">
     <!-- Bouton d'icône pour afficher le menu -->
     <button @click="toggleMenu" class="text-gray-200 focus:outline-none">
       <svg
@@ -15,7 +15,54 @@
         />
       </svg>
     </button>
-    <button id="logout"></button>
+
+    <!-- Section de déconnexion -->
+    <div class="logoutbutton">
+      <div v-if="isLogin">
+        <button @click="logout" class="flex items-center">
+          <span class="mr-2 text-gray-200">Log out</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 text-gray-200 logout"
+            viewBox="0 0 20 20"
+          >
+            <g id="layer1">
+              <path
+                d="M 0 1 L 0 20 L 12 20 L 12 16 L 11 16 L 11 19 L 1 19 L 1 2 L 11 2 L 11 5 L 12 5 L 12 1 L 0 1 z M 15 7 L 18 10 L 5 10 L 5 11 L 18 11 L 15 14 L 16.5 14 L 20 10.5 L 16.5 7 L 15 7 z "
+                style="
+                  fill: #222222;
+                  fill: currentColor;
+                  stroke: none;
+                  stroke-width: 0px;
+                "
+              />
+            </g>
+          </svg>
+        </button>
+      </div>
+      <div v-else>
+        <button @click="route2signin" class="flex items-center">
+          <span class="mr-2 text-gray-200">Sign in</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-8 w-8 text-gray-200 login"
+            viewBox="0 0 20 20"
+          >
+            <g id="layer1">
+              <path
+                d="M 8 1 L 8 5 L 9 5 L 9 2 L 19 2 L 19 19 L 9 19 L 9 16 L 8 16 L 8 20 L 20 20 L 20 1 L 8 1 z M 10 7 L 13 10 L 0 10 L 0 11 L 13 11 L 10 14 L 11.5 14 L 15 10.5 L 11.5 7 L 10 7 z "
+                style="
+                  fill: #222222;
+                  fill: currentColor;
+                  stroke: none;
+                  stroke-width: 0px;
+                "
+              />
+            </g>
+          </svg>
+        </button>
+      </div>
+    </div>
 
     <!-- Menu -->
     <transition name="fade">
@@ -32,7 +79,6 @@
           >
             Home
           </li>
-
           <li
             @click="route2tickets"
             class="cursor-pointer px-4 py-2 text-white hover:bg-slate-700 rounded-lg"
@@ -62,8 +108,12 @@
 import router from "../router";
 import { ref } from "vue";
 import { vOnClickOutside } from "@vueuse/components";
+import { authGuard } from "../_helpers/auth-gard.js";
+
+console.log("authGuard", authGuard());
 
 const showMenu = ref(false);
+const isLogin = ref(authGuard()); // Détermine si l'utilisateur est connecté ou non
 
 const toggleMenu = () => {
   if (showMenu.value === false) {
@@ -72,6 +122,21 @@ const toggleMenu = () => {
     showMenu.value = false;
   }
 };
+
+const logout = () => {
+  // Effacer le local storage
+  localStorage.removeItem("id2ticket"); // Supprimez les données de l'utilisateur (vous pouvez ajuster le nom de la clé selon votre cas)
+  console.log("effacé");
+  // Effacer le cookie d'accès
+  document.cookie =
+    "access_token=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
+
+    // Ajouter une temporisation avant la redirection
+    setTimeout(() => {
+    router.push(`/signin`);
+  }, 100); // Redirige après 100 millisecondes
+};
+
 const hideMenu = () => {
   showMenu.value = false;
 };

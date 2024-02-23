@@ -10,14 +10,14 @@ export function authenticateMiddleware(req, res, next) {
       .status(401)
       .json({ status: "error", message: "Unauthorized: Missing access token" });
     // console.log('pas de token')
-    // return res.redirect('/api/signin')
+    // return res.redirect("/api/signin");
   }
 
   try {
     const decoded = jwt.verify(token, "eureka");
-    // console.log('decoded: ', decoded)
+    // console.log("decoded: ", decoded);
     req.user = decoded;
-    // console.log('decoded token', req.user)
+    // console.log("decoded token", req.user);
     next();
   } catch (error) {
     console.error("Erreur de vérification du token:", error);

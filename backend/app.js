@@ -56,7 +56,8 @@ app.post("/api/signin", async (req, res) => {
         };
         const secretKey = "eureka";
         const token = jwt.sign(payload, secretKey);
-        res.cookie("access_token", token);
+        res.cookie("access_token", token, {httpOnly: false, secure: 'true', sameSite: 'lax'}); //en prod mettre secure et samesite sur true.
+        
       } else {
         //Token user
         const payload = {
@@ -69,7 +70,8 @@ app.post("/api/signin", async (req, res) => {
         };
         const secretKey = "eureka";
         const token = jwt.sign(payload, secretKey);
-        res.cookie("access_token", token);
+        res.cookie("access_token", token, {httpOnly: true, secure: true, sameSite: 'strict'});
+        // res.cookie("access_token", token); 
       }
       //Envoi de la reponse
       res.json({
