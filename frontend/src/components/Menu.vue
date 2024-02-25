@@ -2,6 +2,7 @@
   <div class="relative bg-slate-900 flex justify-between p-2">
     <!-- Bouton d'icône pour afficher le menu -->
     <button @click="toggleMenu" class="text-gray-200 focus:outline-none">
+      
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-8 w-8"
@@ -15,7 +16,8 @@
         />
       </svg>
     </button>
-
+    
+    <span v-if="isLogin" class="mr-2 text-gray-200">User : {{ user }}</span>
     <!-- Section de déconnexion -->
     <div class="logoutbutton">
       <div v-if="isLogin">
@@ -74,6 +76,12 @@
         <ul>
           <!-- Liens du menu -->
           <li
+            @click="route2admin"
+            class="cursor-pointer px-4 py-2 text-white hover:bg-slate-700 rounded-lg"
+          >
+          Admin
+        </li>
+          <li
             @click="route2home"
             class="cursor-pointer px-4 py-2 text-white hover:bg-slate-700 rounded-lg"
           >
@@ -110,10 +118,11 @@ import { ref } from "vue";
 import { vOnClickOutside } from "@vueuse/components";
 import { authGuard } from "../_helpers/auth-gard.js";
 
-console.log("authGuard", authGuard());
-
 const showMenu = ref(false);
 const isLogin = ref(authGuard()); // Détermine si l'utilisateur est connecté ou non
+const user = ref(localStorage.getItem('username'));
+
+
 
 const toggleMenu = () => {
   if (showMenu.value === false) {
@@ -126,7 +135,8 @@ const toggleMenu = () => {
 const logout = () => {
   // Effacer le local storage
   localStorage.removeItem("id2ticket"); // Supprimez les données de l'utilisateur (vous pouvez ajuster le nom de la clé selon votre cas)
-  console.log("effacé");
+  localStorage.removeItem("username");
+  
   // Effacer le cookie d'accès
   document.cookie =
     "access_token=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
@@ -134,7 +144,7 @@ const logout = () => {
     // Ajouter une temporisation avant la redirection
     setTimeout(() => {
     router.push(`/signin`);
-  }, 100); // Redirige après 100 millisecondes
+  }, 200); // Redirige après 100 millisecondes
 };
 
 const hideMenu = () => {
@@ -156,4 +166,11 @@ const route2form = () => {
 const route2signin = () => {
   router.push(`/signin`);
 };
+
+const route2admin = () => {
+  router.push(`/admin`);
+};
+
+
+
 </script>

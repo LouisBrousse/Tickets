@@ -24,7 +24,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-// import { defineProps } from 'vue'
 import { CATEGORIES, PRIORITIES } from '../constants'
 
 // Define props with ticketId as a required prop

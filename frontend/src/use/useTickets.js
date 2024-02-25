@@ -25,6 +25,7 @@ export const allTickets = computed(() => {
     .then((response) => response.json())
     .then((ticketlist) => {
       // Populate the id2ticket reference with fetched ticket data
+      console.log('ticketlist', ticketlist)
       for (const ticket of ticketlist) {
         id2ticket.value[ticket.id] = ticket;
       }
