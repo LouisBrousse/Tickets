@@ -11,7 +11,7 @@ export default defineConfig(({ command, mode }) => {
          open: true,
          proxy: {
             '^/api/.*': {
-               target: 'http://localhost:3000',
+               target: 'http://localhost:3006',
                ws: true,
                secure: false,
                changeOrigin: true,

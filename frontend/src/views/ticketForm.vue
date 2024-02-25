@@ -167,8 +167,8 @@ const getRandomOptionprio = () => {
 };
 
 const getRandomEmail = async () => {
-  const user = ref(localStorage.getItem('username'));
-    return user
+  const user = ref(localStorage.getItem("username"));
+  return user;
 };
 
 const getRandomLoremIpsum = () => {
@@ -199,7 +199,7 @@ const getRandomLoremIpsum = () => {
 const randomLoremIpsum = getRandomLoremIpsum();
 
 const fillFormRandomly = async () => {
-  formData.value.email =  await getRandomEmail();
+  formData.value.email = await getRandomEmail();
   formData.value.category = getRandomOption();
   formData.value.description = `Random description ${randomLoremIpsum}`;
   formData.value.priority = getRandomOptionprio();

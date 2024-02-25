@@ -35,7 +35,10 @@
       </form>
       <a v-if="errorMessage" class="text-red-500">{{ errorMessage }}</a>
     </div>
-    <button @click=signIn2Register class="p-4 bg-green-500 text-white rounded-md py-2 hover:bg-green-600 transition duration-300">
+    <button
+      @click="signIn2Register"
+      class="p-4 bg-green-500 text-white rounded-md py-2 hover:bg-green-600 transition duration-300"
+    >
       Première connection? Enregistrez vous ici!
     </button>
   </div>
@@ -50,9 +53,7 @@ const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
 
-
 const submitForm = async () => {
-  
   // Envoyer les données de connexion dans l'en-tête de la requête
   const response = await fetch("/api/signin", {
     method: "POST",
@@ -67,10 +68,10 @@ const submitForm = async () => {
 
   // Récupérer la réponse du serveur
   const data = await response.json();
-  
+
   // Gérer la réponse
   if (data.status === "success") {
-    localStorage.setItem('username', data.user);
+    localStorage.setItem("username", data.user);
     console.log("Login successful");
     router.push("/tickets");
   } else {
@@ -79,5 +80,5 @@ const submitForm = async () => {
   }
 };
 
-const signIn2Register =()=> router.push("/register")
+const signIn2Register = () => router.push("/register");
 </script>

@@ -11,13 +11,12 @@ const ticketListComplete = ref(false);
 
 // Computed property to get all tickets
 export const allTickets = computed(() => {
-  console.log('ticketListComplete.value : ', ticketListComplete.value)
-  
+  console.log("ticketListComplete.value : ", ticketListComplete.value);
+
   // If the ticket list data is ready, return all tickets as an array
   if (ticketListComplete.value) {
     // console.log('test')
     return Object.values(id2ticket.value);
-    
   }
 
   // If the ticket list data is not ready, fetch it from the API
@@ -25,7 +24,7 @@ export const allTickets = computed(() => {
     .then((response) => response.json())
     .then((ticketlist) => {
       // Populate the id2ticket reference with fetched ticket data
-      console.log('ticketlist', ticketlist)
+      console.log("ticketlist", ticketlist);
       for (const ticket of ticketlist) {
         id2ticket.value[ticket.id] = ticket;
       }
@@ -33,7 +32,7 @@ export const allTickets = computed(() => {
       ticketListComplete.value = true;
     });
 
-  console.log('id2ticket : ',id2ticket.value)
+  console.log("id2ticket : ", id2ticket.value);
   // Return null while waiting for the data to be fetched
   return [];
 });
@@ -97,8 +96,8 @@ export const allSortedTicket = computed(() => {
 });
 
 export const deleteDb = async () => {
-  const response = await fetch("/api/deleteDB",{
-    method: "DELETE" // Spécifiez la méthode DELETE
+  const response = await fetch("/api/deleteDB", {
+    method: "DELETE", // Spécifiez la méthode DELETE
   });
 
   if (response.status === 200) {

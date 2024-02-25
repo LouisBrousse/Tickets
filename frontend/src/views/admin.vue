@@ -40,10 +40,9 @@
 </template>
 
 <script setup>
-
 import { ref } from "vue";
 import Menu from "../components/Menu.vue";
-import { deleteDb} from "../use/useTickets";
+import { deleteDb } from "../use/useTickets";
 
 const email = ref("");
 

@@ -1,6 +1,9 @@
 <template>
   <!-- Ticket Card Component -->
-  <div class="max-w-md rounded-lg overflow-hidden shadow-lg m-4 cursor-pointer" :class="{'bg-gray-200': selected}">
+  <div
+    class="max-w-md rounded-lg overflow-hidden shadow-lg m-4 cursor-pointer"
+    :class="{ 'bg-gray-200': selected }"
+  >
     <!-- Category Information -->
     <div id="category" class="text-left px-2 py-2">
       <span
@@ -16,12 +19,18 @@
     </div>
 
     <!-- Ticket ID -->
-    <div id="id" class="font-bold text-xl px-6 mb-2">Id# : <a>{{ ticket.id }}</a></div>
-    <div id="id" class=" text-xl px-6 mb-2">User : <a>{{ ticket.email }}</a></div>
+    <div id="id" class="font-bold text-xl px-6 mb-2">
+      Id# : <a>{{ ticket.id }}</a>
+    </div>
+    <div id="id" class="text-xl px-6 mb-2">
+      User : <a>{{ ticket.email }}</a>
+    </div>
 
     <!-- Ticket Date -->
     <div id="date" class="px-6 py-4">
-      <div class="text-base mb-2">Date : <a>{{ formatDate(ticket.created_at) }}</a></div>
+      <div class="text-base mb-2">
+        Date : <a>{{ formatDate(ticket.created_at) }}</a>
+      </div>
     </div>
 
     <!-- Priority Information -->
@@ -31,7 +40,7 @@
         :class="{
           'bg-green-500': ticket.priority === 'low',
           'bg-orange-500': ticket.priority === 'normal',
-          'bg-red-500': ticket.priority === 'high'
+          'bg-red-500': ticket.priority === 'high',
         }"
       >
         {{ PRIORITIES[ticket.priority] }}
@@ -41,10 +50,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { format } from 'date-fns';
-import { CATEGORIES, PRIORITIES } from '../constants';
-import { ticketOfId } from '../use/useTickets';
+import { computed } from "vue";
+import { format } from "date-fns";
+import { CATEGORIES, PRIORITIES } from "../constants";
+import { ticketOfId } from "../use/useTickets";
 
 // Props definition
 const props = defineProps({
@@ -58,14 +67,14 @@ const props = defineProps({
   },
 });
 
-// Ticket data reference 
-const ticket = computed(()=> ticketOfId.value(props.ticketId));
-console.log('tickets', ticket.value)
+// Ticket data reference
+const ticket = computed(() => ticketOfId.value(props.ticketId));
+console.log("tickets", ticket.value);
 // Function to format date and time
 
 function formatDate(isoDate) {
-   if (!isoDate) return ''
-   return format(new Date(isoDate), 'dd/MM/yyyy HH:mm')
+  if (!isoDate) return "";
+  return format(new Date(isoDate), "dd/MM/yyyy HH:mm");
 }
 
 // const ticket = ticketOfId.value(props.ticketId) // 2eme solution pour le code dessus voir dans use la fonction ticketOfId

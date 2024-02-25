@@ -48,10 +48,11 @@
         </button>
       </form>
       <a v-if="errorMessage" class="text-red-500">{{ errorMessage }}</a>
-     
-
     </div>
-    <button @click=register2SignIn class="p-4 bg-green-500 text-white rounded-md py-2 hover:bg-green-600 transition duration-300">
+    <button
+      @click="register2SignIn"
+      class="p-4 bg-green-500 text-white rounded-md py-2 hover:bg-green-600 transition duration-300"
+    >
       Déjà enregistré? entrez par ici!
     </button>
   </div>
@@ -101,5 +102,5 @@ const submitForm = async () => {
   }
 };
 
-const register2SignIn =()=> router.push("/signin")
+const register2SignIn = () => router.push("/signin");
 </script>
