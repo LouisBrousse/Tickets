@@ -17,6 +17,7 @@
 
     <!-- Ticket ID -->
     <div id="id" class="font-bold text-xl px-6 mb-2">Id# : <a>{{ ticket.id }}</a></div>
+    <div id="id" class=" text-xl px-6 mb-2">User : <a>{{ ticket.email }}</a></div>
 
     <!-- Ticket Date -->
     <div id="date" class="px-6 py-4">
@@ -40,10 +41,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { format } from 'date-fns';
 import { CATEGORIES, PRIORITIES } from '../constants';
-import { asyncTicket, ticketOfId } from '../use/useTickets';
+import { ticketOfId } from '../use/useTickets';
 
 // Props definition
 const props = defineProps({
@@ -59,7 +60,7 @@ const props = defineProps({
 
 // Ticket data reference 
 const ticket = computed(()=> ticketOfId.value(props.ticketId));
-
+console.log('tickets', ticket.value)
 // Function to format date and time
 
 function formatDate(isoDate) {

@@ -59,7 +59,7 @@ ticket's category and priority.
  </template>
  
  <script setup>
- import { ref, onMounted, watch, defineProps } from 'vue';
+ import { ref, onMounted, watch} from 'vue';
  import { format } from 'date-fns';
  import { CATEGORIES, PRIORITIES } from '../constants';
  import { asyncTicket } from '../use/useTickets';

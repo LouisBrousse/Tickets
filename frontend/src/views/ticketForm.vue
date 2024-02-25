@@ -90,14 +90,7 @@
         </button>
       </div>
 
-      <div class="flex items-center justify-end py-2">
-        <button
-          @click="clearDB"
-          class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 w-60 p-4 rounded focus:outline-none focus:shadow-outline"
-        >
-          Effacer la DB
-        </button>
-      </div>
+      <div class="flex items-center justify-end py-2"></div>
     </div>
   </div>
 </template>
@@ -106,7 +99,7 @@
 import { ref } from "vue";
 import { computed } from "vue";
 import router from "../router";
-import { addTicket, deleteDb } from "../use/useTickets";
+import { addTicket } from "../use/useTickets";
 import Menu from "../components/Menu.vue";
 // import { isAuthenticated, checkAuth } from "../use/useAuth"
 
@@ -156,12 +149,9 @@ const submitForm = async () => {
     console.log("response front", response);
     router.push(`/recap/${response.id}`);
   } catch (error) {
-    console.error('Erreur lors de la soumission du formulaire :', error);
+    console.error("Erreur lors de la soumission du formulaire :", error);
     // Gérer l'erreur ici, par exemple, afficher un message à l'utilisateur ou rediriger vers une page d'erreur
   }
-}
-const clearDB = async () => {
-  const response = await deleteDb();
 };
 
 // ___________________________________________
@@ -176,9 +166,9 @@ const getRandomOptionprio = () => {
   return OPTIONSprio[randomIndex].value;
 };
 
-const getRandomEmail = () => {
-  const randomString = Math.random().toString(36).substring(2, 10);
-  return `user${randomString}@example.com`;
+const getRandomEmail = async () => {
+  const user = ref(localStorage.getItem('username'));
+    return user
 };
 
 const getRandomLoremIpsum = () => {
@@ -208,8 +198,8 @@ const getRandomLoremIpsum = () => {
 // Exemple d'utilisation
 const randomLoremIpsum = getRandomLoremIpsum();
 
-const fillFormRandomly = () => {
-  formData.value.email = getRandomEmail();
+const fillFormRandomly = async () => {
+  formData.value.email =  await getRandomEmail();
   formData.value.category = getRandomOption();
   formData.value.description = `Random description ${randomLoremIpsum}`;
   formData.value.priority = getRandomOptionprio();

@@ -11,11 +11,22 @@ model Ticket {
    created_at         DateTime          @default(now()) @db.Timestamptz(6)
    handled_at         DateTime?
    done_at            DateTime?
-   email              String
+   // email              String
    category           Category
    description        String
    priority           PriorityLevel
    status             Status            @default(submitted)
+
+   author             User @relation(fields: [email], references: [email])
+   email              String 
+}
+
+model User {
+   id                Int               @default(autoincrement()) @id
+   email             String            @unique
+   password          String
+   isAdmin           Boolean
+   ticket            Ticket[]
 }
 
 enum Category {

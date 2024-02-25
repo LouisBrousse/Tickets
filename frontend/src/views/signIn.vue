@@ -1,6 +1,6 @@
 <template>
   <Menu></Menu>
-  <div class="flex justify-center items-center h-screen">
+  <div class="flex flex-col justify-center items-center h-screen gap-4">
     <div class="bg-white p-8 rounded-lg shadow-lg">
       <h2 class="text-xl font-semibold mb-4">Connexion à l'App tickets</h2>
       <form @submit.prevent="submitForm" class="space-y-4">
@@ -35,6 +35,9 @@
       </form>
       <a v-if="errorMessage" class="text-red-500">{{ errorMessage }}</a>
     </div>
+    <button @click=signIn2Register class="p-4 bg-green-500 text-white rounded-md py-2 hover:bg-green-600 transition duration-300">
+      Première connection? Enregistrez vous ici!
+    </button>
   </div>
 </template>
 <script setup>
@@ -47,11 +50,9 @@ const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
 
-const submitForm = async () => {
-  // Générer le hash du mot de passe
-  // const salt = await bcrypt.genSalt(10);
-  // const passwordHash = await bcrypt.hash(password.value, salt);
 
+const submitForm = async () => {
+  
   // Envoyer les données de connexion dans l'en-tête de la requête
   const response = await fetch("/api/signin", {
     method: "POST",
@@ -66,14 +67,17 @@ const submitForm = async () => {
 
   // Récupérer la réponse du serveur
   const data = await response.json();
-
+  
   // Gérer la réponse
   if (data.status === "success") {
+    localStorage.setItem('username', data.user);
     console.log("Login successful");
     router.push("/tickets");
   } else {
     console.error("Login failed:", data.message);
-    errorMessage.value = data.message
+    errorMessage.value = data.message;
   }
 };
+
+const signIn2Register =()=> router.push("/register")
 </script>
