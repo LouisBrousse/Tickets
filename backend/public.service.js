@@ -26,49 +26,25 @@ export async function signin(req, res) {
         // console.log("password COMPARED", isPasswordMatch);
 
         if (isPasswordMatch) {
-            //vérif si admin
-            if (existingUser.isAdmin) {
-                const payload = {
-                    user: existingUser.email,
-                    permissions: {
-                        isAdmin: true,
-                        "read-list": "all",
-                        "read-ticket": "all",
-                        "write-ticket": "all",
-                    },
-                };
-                const secretKey = "eureka";
-                const token = jwt.sign(payload, secretKey);
-                res.cookie("access_token", token, {
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: "lax",
-                }); //en prod mettre secure et samesite sur true.
-                res.cookie("logged", true)
-            } else {
-                //Token user
-                const payload = {
-                    user: existingUser.email,
-                    permissions: {
-                        isAdmin: false,
-                        "read-list": `${existingUser.email}`,
-                        "read-ticket": `${existingUser.email}`,
-                        "write-ticket": "none",
-                    },
-
-                };
-                console.log('payload', payload)
-                const secretKey = "eureka";
-                const token = jwt.sign(payload, secretKey);
-                res.cookie("access_token", token, {
-                    httpOnly: false,
-                    secure: false,
-                    sameSite: "lax",
-                });
-
-                res.cookie("logged", true)
-                //créer un cookie logged (booléen)
+            const payload = { 
+                user: existingUser.email,
+                expire: Date.now() + 86400 // 1 day
             }
+            const secretKey = process.env.SIGNING_KEY
+            if (!key) {
+                return res
+                .status(500)
+                .json({ status: "error", message: "No signing key defined" }); 
+            }
+
+            const token = jwt.sign(payload, secretKey);
+            res.cookie("access_token", token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: "lax",
+            }); //en prod mettre secure et samesite sur true.
+            res.cookie("logged", true)
+            res.cookie("isAdmin", existingUser.isAdmin)
             //Envoi de la reponse
             res.json({
                 status: "success",
