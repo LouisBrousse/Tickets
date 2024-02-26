@@ -55,6 +55,6 @@ export async function authenticateMiddleware(req, res, next) {
     } catch (error) { 
         console.error("Erreur de vérification du token:", error);
         return res401(res, error.message);
-    }
+    } 
 }  
  

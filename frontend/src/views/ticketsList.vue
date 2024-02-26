@@ -119,7 +119,7 @@ const onClick = (ticketId) => {
   selectedTicketId.value = ticketId;
   console.log("selectedTicketId :", selectedTicketId.value);
   router.push(`/tickets/${ticketId}`);
-};
+};  
 
 const filteredPriorities = ref(new Set(["low", "normal", "high"]));
 const togglePriority = (priority) => {

@@ -24,7 +24,6 @@ export const allTickets = computed(() => {
     .then((response) => response.json())
     .then((ticketlist) => {
       // Populate the id2ticket reference with fetched ticket data
-      console.log("ticketlist", ticketlist);
       for (const ticket of ticketlist) {
         id2ticket.value[ticket.id] = ticket;
       }
@@ -32,7 +31,6 @@ export const allTickets = computed(() => {
       ticketListComplete.value = true;
     });
 
-  
   // Return null while waiting for the data to be fetched
   return [];
 });
@@ -41,16 +39,18 @@ export const allTickets = computed(() => {
 export async function asyncTicket(ticketid) {
   // If ticket data already exists in the reference, return it
   if (id2ticket.value[ticketid]) {
+    console.log('le ticket est dans id2ticket')
     return id2ticket.value[ticketid];
   } else {
+    console.log('le ticket PAS dans id2ticket')
     // Otherwise, fetch the ticket data from the API
     const response = await fetch(`/api/ticket/${ticketid}`);
     const ticket = await response.json();
     // Store the fetched ticket data in the reference for future use
     id2ticket.value[ticket.id] = ticket;
-  }
+  } 
   return id2ticket.value[ticketid];
-}  
+}
 
 export async function addTicket(formData) {
   console.log("addTicket");
@@ -83,7 +83,6 @@ export const ticketOfId = computed(() => (id) => {
     });
 });
 
-//Part8
 // fonction de triage
 export const allSortedTicket = computed(() => {
   return allTickets.value.sort((ticket1, ticket2) => {

@@ -15,7 +15,7 @@ export async function getTicketsList(req, res) {
             const tickets = await prisma.ticket.findMany({
                 where: {
                     email: req.user.user,
-                },
+                }, 
             });
             res.json(tickets); 
         } else {
@@ -35,15 +35,22 @@ export async function getTicketsList(req, res) {
   
 // Fonction pour obtenir un ticket spécifique
 export async function getTicket(req, res) {
+
+    console.log("dans la fonction get ticket")
+
     const userPermissions = req.user.permissions;
      // Vérification des permissions de l'utilisateur pour lire un ticket spécifique
     if (userPermissions["read-ticket"] === "all") {
         // Si l'utilisateur a la permission de lire tous les tickets
-        const tickets = await prisma.ticket.findMany();
-        res.json(tickets);
+        const objectId = parseInt(req.params.id); 
+
+        const ticket = await prisma.ticket.findUnique({
+            where: { id: objectId },
+        });
+        res.json(ticket);
     } else if (userPermissions["read-ticket"] === req.user.user) { 
         // Si l'utilisateur est autorisé à lire le ticket
-        const objectId = parseInt(req.params.id);
+        const objectId = parseInt(req.params.id); 
 
         const ticket = await prisma.ticket.findUnique({
             where: { id: objectId },
@@ -55,7 +62,7 @@ export async function getTicket(req, res) {
             status: "error",
             message: "Forbidden: Insufficient permissions",
         });
-    }
+    } 
 }
 
 // Fonction pour créer un nouveau ticket
