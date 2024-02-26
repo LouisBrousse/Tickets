@@ -32,7 +32,7 @@ export const allTickets = computed(() => {
       ticketListComplete.value = true;
     });
 
-  console.log("id2ticket : ", id2ticket.value);
+  
   // Return null while waiting for the data to be fetched
   return [];
 });
@@ -50,7 +50,7 @@ export async function asyncTicket(ticketid) {
     id2ticket.value[ticket.id] = ticket;
   }
   return id2ticket.value[ticketid];
-}
+}  
 
 export async function addTicket(formData) {
   console.log("addTicket");

@@ -1,70 +1,60 @@
 import jwt from "jsonwebtoken";
+import { res401 } from "../res401.js";
+import { prisma } from "../prisma/prisma.singleton.js";
 
-
+// Middleware d'authentification
 export async function authenticateMiddleware(req, res, next) {
-    // console.log('authentification')
-    const token = req.cookies.access_token;
-    // console.log('token authmiddle', token)
-
-    if (!token) {
-        // console.log("pas de token");
-        return res
-            .status(401)
-            .json({ status: "error", message: "Unauthorized: Missing access token" });
-
-        // return res.redirect("/api/signin");
-    }
+    const token = req.cookies.access_token; // Récupération du jeton d'accès depuis les cookies de la requête
 
     try {
-        const key = process.env.SIGNING_KEY
+        if (!token) {
+            // Si aucun jeton d'accès n'est fourni dans les cookies, renvoyer une erreur d'authentification
+            throw new Error("Unauthorized: Missing access token");
+        }
+
+        const key = process.env.SIGNING_KEY;
         if (!key) {
-            return res
-            .status(500)
-            .json({ status: "error", message: "No signing key defined" }); 
+            // Vérifiez si la clé de signature est définie dans les variables d'environnement
+            throw new Error("No signing key defined");
         }
+
+        // Vérification et décryptage du jeton d'accès
         const decoded = jwt.verify(token, key);
-        // console.log("decoded: ", decoded);
 
-        // vérif date d'expiration
+        // Vérification de la date d'expiration du jeton d'accès
         if (Date.now() > decoded.expire) {
-            return res
-                .status(401)
-                .json({ status: "error", message: "Unauthorized: token expired" }); 
+            throw new Error("Unauthorized: Token expired");
         }
 
-        //vérif user
+        // Vérification de l'utilisateur associé au jeton d'accès
         const dbUser = await prisma.user.findUnique({
             where: {
-                email: decoded.user
+                email: decoded.user,
             },
-        })
+        }); 
+
         if (!dbUser) {
-            return res
-                .status(401)
-                .json({ status: "error", message: "Unauthorized: Unknwon user" });
-        }
+            throw new Error("Unauthorized: Unknown user");
+        } 
+
+        // Création du payload contenant les informations de l'utilisateur
         const payload = {
             user: dbUser.email,
             isAdmin: dbUser.isAdmin,
             permissions: {
-                "read-list": dbUser.isAdmin ? "all" : `${dbUser.email}`,
-                "read-ticket": dbUser.isAdmin ? "all" : `${dbUser.email}`,
+                "read-list": dbUser.isAdmin ? "all" : dbUser.email,
+                "read-ticket": dbUser.isAdmin ? "all" : dbUser.email,
                 "write-ticket": dbUser.isAdmin ? "all" : "none",
-            }
-        };
+            },
+        }; 
+        // console.log('payload :',payload)
+        // Stockage des informations de l'utilisateur dans la requête pour une utilisation ultérieure
+        req.user = payload;  
 
-        req.user = payload;
-        console.log("decoded token", req.user);
-
-        next();
-    } catch (error) {
+        next(); // Appel à la fonction next() pour passer au middleware suivant
+    } catch (error) { 
         console.error("Erreur de vérification du token:", error);
-        //effacer le cookie
-        // Effacer le cookie d'accès
-        document.cookie =
-            "access_token=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
-        "logged=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
-
-        return next({ status: 401, message: "Unauthorized: Invalid access token" });
+        return res401(res, error.message);
     }
-}
+}  
+ 

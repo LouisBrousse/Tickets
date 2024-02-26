@@ -1,17 +1,17 @@
-import { prisma } from "./prisma/prisma.singleton.js"
+import { prisma } from "./prisma/prisma.singleton.js";
 
+// Fonction pour effacer la base de données de tickets
 export async function deleteDb(req, res) {
     const userPermissions = req.user.permissions;
-    console.log("deleting");
     const requiredPermission = userPermissions.isAdmin ? "all" : "none";
 
-    // Vérifier les autorisations
+    // Vérification des autorisations pour effacer la base de données
     if (userPermissions["write-ticket"] === requiredPermission) {
-        // Autorisé, procéder avec la logique de la route
-        const deletetickets = await prisma.ticket.deleteMany({});
-        res.json({ status: "success", message: "DB effacée" });
+        // Si l'utilisateur a la permission d'effacer la base de données
+        const deleteTickets = await prisma.ticket.deleteMany({});
+        res.json({ status: "success", message: "Base de données effacée" });
     } else {
-        // Non autorisé
+        // Si l'utilisateur n'a pas les permissions nécessaires
         res.status(403).json({
             status: "error",
             message: "Forbidden: Insufficient permissions",
@@ -19,28 +19,32 @@ export async function deleteDb(req, res) {
     }
 }
 
+// Fonction pour effacer un utilisateur
 export async function deleteUser(req, res) {
     const userEmail = req.body.email;
     try {
+        // Recherche de l'utilisateur dans la base de données
         const isUser = await prisma.user.findUnique({
             where: {
                 email: userEmail,
             },
         });
+
         if (isUser) {
+            // Si l'utilisateur existe, procéder à la suppression
             const deleteUser = await prisma.user.delete({
                 where: {
                     email: isUser.email,
                 },
             });
-            res.json({ status: "success", message: "User effacée" });
+            res.json({ status: "success", message: "Utilisateur effacé" });
         } else {
-            res
-                .status(404)
-                .json({ status: "error", message: "Utilisateur non trouvé" });
+            // Si l'utilisateur n'existe pas
+            res.status(404).json({ status: "error", message: "Utilisateur non trouvé" });
         }
     } catch (error) {
-        console.log("erreur : ", error);
+        // En cas d'erreur lors de la suppression de l'utilisateur
+        console.error("Erreur lors de la suppression de l'utilisateur:", error);
         res.status(500).json({
             status: "error",
             message: "Erreur lors de la suppression de l'utilisateur",

@@ -95,8 +95,8 @@ const ticket = ref({});
 // Fetch ticket details on component mount
 onMounted(async () => {
   ticket.value = await asyncTicket(props.ticketId);
-  console.log("ti", ticket.value);
-});
+  console.log("ticket detail", ticket.value);
+});  
 
 // Watch for changes in ticketId prop and update ticket details
 watch(
