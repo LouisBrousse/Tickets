@@ -32,7 +32,7 @@ app.post("/api/signin", async (req, res) => {
     },
   });
 
-  console.log("existingUser", existingUser);
+  // console.log("existingUser", existingUser);
   // console.log("login", userLogin.password, "list", existingUser.password);
 
   if (existingUser) {
@@ -45,11 +45,10 @@ app.post("/api/signin", async (req, res) => {
     // console.log("password COMPARED", isPasswordMatch);
 
     if (isPasswordMatch) {
-      
       //vérif si admin
       if (existingUser.isAdmin) {
         const payload = {
-          
+          user: existingUser.email,
           permissions: {
             isAdmin: true,
             "read-list": "all",
@@ -60,10 +59,11 @@ app.post("/api/signin", async (req, res) => {
         const secretKey = "eureka";
         const token = jwt.sign(payload, secretKey);
         res.cookie("access_token", token, {
-          httpOnly: false,
-          secure: false,
+          httpOnly: true,
+          secure: true,
           sameSite: "lax",
         }); //en prod mettre secure et samesite sur true.
+        res.cookie("logged", true)
       } else {
         //Token user
         const payload = {
@@ -74,7 +74,9 @@ app.post("/api/signin", async (req, res) => {
             "read-ticket": `${existingUser.email}`,
             "write-ticket": "none",
           },
+          
         };
+        console.log('payload', payload)
         const secretKey = "eureka";
         const token = jwt.sign(payload, secretKey);
         res.cookie("access_token", token, {
@@ -82,6 +84,9 @@ app.post("/api/signin", async (req, res) => {
           secure: false,
           sameSite: "lax",
         });
+
+        res.cookie("logged", true) 
+        //créer un cookie logged (booléen)
       }
       //Envoi de la reponse
       res.json({
@@ -114,10 +119,13 @@ app.post("/api/register", async (req, res) => {
     },
   });
 
+  console.log('is user :', isUser)
+
   if (!isUser) {
     try {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(userParams.password, saltRounds);
+
 
       const newUser = await prisma.user.create({
         data: {
@@ -152,26 +160,26 @@ app.use(authenticateMiddleware);
 app.get("/api/ticket", async (req, res) => {
   try {
     const userPermissions = req.user.permissions;
-    console.log("user", req.user.user);
+    console.log("user de api/ticket", req.user.user);
 
     if (userPermissions["read-list"] === "all") {
       const tickets = await prisma.ticket.findMany();
       res.json(tickets);
     } else if (userPermissions["read-list"] === req.user.user) {
-        const tickets = await prisma.ticket.findMany({
-          where: {
-            email: req.user.user,
-          }
-        });
-        res.json(tickets);
-      } else {
-        res.status(403).json({
-          status: "error",
-          message: "Forbidden: Insufficient permissions",
-          permissions: userPermissions,
-        });
-      }
-    } catch (error) {
+      const tickets = await prisma.ticket.findMany({
+        where: {
+          email: req.user.user,
+        },
+      });
+      res.json(tickets);
+    } else {
+      res.status(403).json({
+        status: "error",
+        message: "Forbidden: Insufficient permissions",
+        permissions: userPermissions,
+      });
+    }
+  } catch (error) {
     console.error("Erreur lors de la récupération des tickets:", error);
     res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
@@ -300,6 +308,6 @@ app.get("/api/randomuser", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+app.listen(3006, () => {
+  console.log("Server is running on port 3006");
 });

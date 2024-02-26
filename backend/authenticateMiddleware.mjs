@@ -18,12 +18,17 @@ export function authenticateMiddleware(req, res, next) {
     const decoded = jwt.verify(token, "eureka");
     // console.log("decoded: ", decoded);
     req.user = decoded;
-    // console.log("decoded token", req.user);
-    
+    console.log("decoded token", req.user);
+
     next();
   } catch (error) {
     console.error("Erreur de vérification du token:", error);
-    // return res.status(401).json({ status: 'error', message: 'Unauthorized: Invalid access token' });
+    //effacer le cookie
+    // Effacer le cookie d'accès
+  document.cookie =
+  "access_token=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
+  "logged=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
+
     return next({ status: 401, message: "Unauthorized: Invalid access token" });
   }
 }
