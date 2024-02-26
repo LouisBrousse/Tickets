@@ -1,17 +1,18 @@
-import { createRouter, createWebHistory } from "vue-router";
 
+import { createRouter, createWebHistory } from "vue-router";
 import Ticketform from "/src/views/ticketForm.vue";
 import Ticketslist from "/src/views/ticketsList.vue";
 import signin from "/src/views/signIn.vue";
 import Welcomepage from "/src/views/welcome.vue";
 import register from "/src/views/register.vue";
 import Admin from "/src/views/admin.vue";
-import { authGuard } from "../_helpers/auth-gard";
+import { getLoggedCookie } from "../_helper/cookie";
 
 const routes = [
   {
     path: "/",
     component: Welcomepage,
+    
   },
 
   {
@@ -27,20 +28,20 @@ const routes = [
   {
     path: "/ticketForm",
     component: Ticketform,
-    beforeEnter: authGuard,
+    beforeEnter: getLoggedCookie
   },
 
   {
     path: "/admin",
     component: Admin,
-    beforeEnter: authGuard,
+    beforeEnter: getLoggedCookie
   },
 
   {
     path: "/recap/:ticketId",
     component: () => import("/src/views/ticketRecap.vue"),
     props: true,
-    beforeEnter: authGuard,
+    
   },
 
   {
@@ -53,7 +54,7 @@ const routes = [
         props: true,
       },
     ],
-    beforeEnter: authGuard,
+    beforeEnter: getLoggedCookie
   },
 ];
 

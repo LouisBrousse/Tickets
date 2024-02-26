@@ -115,10 +115,10 @@
 import router from "../router";
 import { ref } from "vue";
 import { vOnClickOutside } from "@vueuse/components";
-import { authGuard } from "../_helpers/auth-gard.js";
+import { getLoggedCookie } from "../_helper/cookie.js";
 
 const showMenu = ref(false);
-const isLogin = ref(authGuard()); // Détermine si l'utilisateur est connecté ou non
+const isLogin = ref(getLoggedCookie()); // Détermine si l'utilisateur est connecté ou non
 const user = ref(localStorage.getItem("username"));
 
 const toggleMenu = () => {
@@ -129,19 +129,31 @@ const toggleMenu = () => {
   }
 };
 
-const logout = () => {
+const logout = async () => {
   // Effacer le local storage
   localStorage.removeItem("id2ticket"); // Supprimez les données de l'utilisateur (vous pouvez ajuster le nom de la clé selon votre cas)
   localStorage.removeItem("username");
 
-  // Effacer le cookie d'accès
-  document.cookie =
-    "access_token=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
+  // Effacer les cookies
+  document.cookie = "isAdmin=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
+  document.cookie = "logged=; expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/;";
 
-  // Ajouter une temporisation avant la redirection
-  setTimeout(() => {
-    router.push(`/signin`);
-  }, 200); // Redirige après 100 millisecondes
+  try {
+    // Appel de l'API de logout côté serveur
+    const response = await fetch("/api/logout", {
+      method: "POST", // Utilisation de la méthode POST pour effectuer le logout
+      credentials: "same-origin", // Inclure les cookies dans la requête
+    });
+
+    if (response.ok) {
+      // Redirection vers la page d'accueil après le logout
+      window.location.href = "/";
+    } else {
+      console.error("Logout request failed");
+    }
+  } catch (error) {
+    console.error("Error during logout:", error);
+  }
 };
 
 const hideMenu = () => {

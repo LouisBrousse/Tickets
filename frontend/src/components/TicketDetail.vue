@@ -88,15 +88,15 @@ const props = defineProps({
     required: true,
   },
 });
-
+ 
 // Ticket data reference
 const ticket = ref({});
-
+console.log("detail du ticket",ticket.value)
 // Fetch ticket details on component mount
 onMounted(async () => {
   ticket.value = await asyncTicket(props.ticketId);
-  console.log("ti", ticket.value);
-});
+  console.log("ticket detail", ticket.value);
+});  
 
 // Watch for changes in ticketId prop and update ticket details
 watch(

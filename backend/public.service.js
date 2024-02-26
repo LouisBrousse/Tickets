@@ -1,97 +1,91 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { prisma } from "./prisma/prisma.singleton.js"
+import { res401 } from "./res401.js";
 
+// Fonction pour gérer l'authentification d'un utilisateur
 export async function signin(req, res) {
     let userLogin = req.body;
-    // console.log("login :", userLogin);
 
-    //vérif user
+    // Vérification de l'utilisateur dans la base de données
     const existingUser = await prisma.user.findUnique({
         where: {
             email: userLogin.email,
         },
     })
 
-    // console.log("existingUser", existingUser);
-    // console.log("login", userLogin.password, "list", existingUser.password);
-
     if (existingUser) {
-        //Si User, vérif du mdp
+        // Vérification du mot de passe si l'utilisateur existe
         const isPasswordMatch = await bcrypt.compare(
             userLogin.password,
             existingUser.password
         );
 
-        // console.log("password COMPARED", isPasswordMatch);
-
         if (isPasswordMatch) {
+            // Création d'un jeton JWT en cas de correspondance de mot de passe
             const payload = { 
                 user: existingUser.email,
-                expire: Date.now() + 86400 // 1 day
+                expire: Date.now() + 86400 // 1 jour
             }
             const secretKey = process.env.SIGNING_KEY
-            if (!key) {
+            if (!secretKey) {
                 return res
                 .status(500)
-                .json({ status: "error", message: "No signing key defined" }); 
+                .json({ status: "error", message: "Aucune clé de signature définie" }); 
             }
 
             const token = jwt.sign(payload, secretKey);
+
+            // Configuration des cookies et envoi de la réponse
             res.cookie("access_token", token, {
                 httpOnly: true,
                 secure: true,
                 sameSite: "lax",
-            }); //en prod mettre secure et samesite sur true.
+            });
             res.cookie("logged", true)
             res.cookie("isAdmin", existingUser.isAdmin)
-            //Envoi de la reponse
             res.json({
                 status: "success",
-                message: `Login successful, bienvenue ${existingUser.email}`,
+                message: `Connexion réussie, bienvenue ${existingUser.email}`,
                 user: existingUser.email,
             });
         } else {
-            //Mot de passe inconu
-            res.status(401).json({ status: "error", message: "Incorrect password" });
+            // En cas de mot de passe incorrect
+            res401(res, "Mot de passe incorrect");
         }
     } else {
-        //Utilisateur inconu
-        res.status(401).json({
-            status: "error",
-            message: "L'utilisateur n'existe pas!",
-        });
-        console.log("L'utilisateur n'existe pas!");
+        // En cas d'utilisateur inexistant
+        res401(res,"L'utilisateur n'existe pas!")
     }
 }
 
+// Fonction pour enregistrer un nouvel utilisateur
 export async function register(req, res) {
     const userParams = req.body;
-    console.log("userParams : ", userParams);
 
-    //vérifier si le user n'existe pas déjà.
+    // Vérification si l'utilisateur existe déjà
     const isUser = await prisma.user.findUnique({
         where: {
             email: userParams.email,
         },
     });
 
-    console.log('is user :', isUser)
-
     if (!isUser) {
         try {
+            // Hachage du mot de passe avant de l'enregistrer dans la base de données
             const saltRounds = 10;
             const hashedPassword = await bcrypt.hash(userParams.password, saltRounds);
 
-
+            // Création du nouvel utilisateur dans la base de données
             const newUser = await prisma.user.create({
                 data: {
                     email: userParams.email,
-                    password: hashedPassword, // Stocker le mot de passe haché
-                    isAdmin: userParams.isAdmin, // Vous devez vérifier comment vous récupérez isAdmin
+                    password: hashedPassword,
+                    isAdmin: userParams.isAdmin,
                 },
             });
 
+            // Réponse indiquant que l'utilisateur a été enregistré avec succès
             res.json({
                 status: "success",
                 message: `Utilisateur enregistré avec succès : ${newUser.email}`,
@@ -100,14 +94,21 @@ export async function register(req, res) {
             console.error("Erreur lors de la création de l'utilisateur:", error);
             res.status(500).json({
                 status: "error",
-                message:
-                    "Une erreur est survenue lors de la création de l'utilisateur.",
+                message: "Une erreur est survenue lors de la création de l'utilisateur.",
             });
         }
     } else {
+        // En cas d'utilisateur déjà existant
         res.status(409).json({
             status: "error",
             message: "Utilisateur déjà enregistré.",
         });
     }
+}
+
+export async function logout(req, res) {
+    res.clearCookie('access_token');
+
+    // Réponse indiquant que le logout a été effectué avec succès
+    res.json({ status: 'success', message: 'Logout successful' });
 }
