@@ -3,6 +3,9 @@ import cookieParser from "cookie-parser";
 import { initAppController } from "./app.controller.js";
 import { initAdminController } from "./admin.controller.js";
 import { initPublicController } from "./public.controller.js";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const app = express();
 
