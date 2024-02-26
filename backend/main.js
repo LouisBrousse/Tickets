@@ -22,5 +22,5 @@ initAdminController(app);
 
 // Démarrage du serveur sur le port 3006
 app.listen(3006, () => {
-    console.log("Server is running on port 3006");
+  console.log("Server is running on port 3006");
 });

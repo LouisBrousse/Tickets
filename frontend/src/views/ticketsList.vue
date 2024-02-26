@@ -108,18 +108,18 @@ import router from "/src/router";
 import { PRIORITIES, CATEGORIES } from "../constants";
 import { allTickets } from "../use/useTickets";
 
-// Reference for the current route
+// Référence pour la route actuelle
 const route = useRoute();
 
-// Reference for the selected ticket ID
+// Référence pour l'ID du ticket sélectionné
 const selectedTicketId = ref(route.params.ticketId);
 
-// Function to handle click events on ticket cards
+// Fonction pour gérer les événements de clic sur les cartes de ticket
 const onClick = (ticketId) => {
   selectedTicketId.value = ticketId;
   console.log("selectedTicketId :", selectedTicketId.value);
   router.push(`/tickets/${ticketId}`);
-};  
+};
 
 const filteredPriorities = ref(new Set(["low", "normal", "high"]));
 const togglePriority = (priority) => {
@@ -144,11 +144,11 @@ const toggleCategory = (category) => {
 const visibleTickets = computed(() =>
   allTickets.value
 
-    // filter list by priorities
+    // filtrer la liste par priorités
     .filter((ticket) => filteredPriorities.value.has(ticket.priority))
-    // filter list by categories
+    // filtrer la liste par catégories
     .filter((ticket) => filteredCategories.value.has(ticket.category))
-    // sort result by 'created_at' attribute
+    // trier le résultat par l'attribut 'created_at'
     .sort((ticket1, ticket2) => {
       // return new Date(ticket1.created_at) - new Date(ticket2.created_at)
       if (ticket1.created_at < ticket2.created_at) return -1;

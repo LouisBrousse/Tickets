@@ -96,13 +96,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import router from "../router";
 import { addTicket } from "../use/useTickets";
 import Menu from "../components/Menu.vue";
-// import { isAuthenticated, checkAuth } from "../use/useAuth"
 
+// Options disponibles pour la catégorie et la priorité des tickets
 const OPTIONS = [
   { value: "furniture", name: "mobilier" },
   { value: "computer", name: "informatique" },
@@ -115,6 +114,7 @@ const OPTIONSprio = [
   { value: "high", name: "Haute" },
 ];
 
+// Référence réactive pour les données du formulaire
 const formData = ref({
   email: null,
   category: null,
@@ -122,10 +122,10 @@ const formData = ref({
   priority: null,
 });
 
-//const formData = ref({}) présentation possible
-
+// Expression régulière pour valider l'adresse email
 let regemail = new RegExp(/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/);
 
+// Validation des champs du formulaire
 const isEmailValid = computed(
   () => regemail.test(formData.value.email) && formData.value.email
 );
@@ -135,6 +135,7 @@ const isDescriptionValid = computed(
 );
 const isPriorityValid = computed(() => !!formData.value.priority);
 
+// Validation du formulaire dans son ensemble
 const isFormValid = computed(
   () =>
     isDescriptionValid.value &&
@@ -143,6 +144,7 @@ const isFormValid = computed(
     isPriorityValid.value
 );
 
+// Soumettre le formulaire de création de ticket
 const submitForm = async () => {
   try {
     const response = await addTicket(formData);
@@ -154,8 +156,7 @@ const submitForm = async () => {
   }
 };
 
-// ___________________________________________
-
+// Fonctions utilitaires pour obtenir des valeurs aléatoires pour le remplissage automatique du formulaire
 const getRandomOption = () => {
   const randomIndex = Math.floor(Math.random() * OPTIONS.length);
   return OPTIONS[randomIndex].value;
@@ -198,6 +199,7 @@ const getRandomLoremIpsum = () => {
 // Exemple d'utilisation
 const randomLoremIpsum = getRandomLoremIpsum();
 
+// Remplir le formulaire avec des valeurs aléatoires
 const fillFormRandomly = async () => {
   formData.value.email = await getRandomEmail();
   formData.value.category = getRandomOption();
@@ -205,6 +207,7 @@ const fillFormRandomly = async () => {
   formData.value.priority = getRandomOptionprio();
 };
 
+// Effacer le formulaire
 const clearForm = () => {
   formData.value.email = null;
   formData.value.category = null;

@@ -50,7 +50,7 @@
 import { ref, onMounted } from "vue";
 import { CATEGORIES, PRIORITIES } from "../constants";
 
-// Define props with ticketId as a required prop
+// Définir les props avec ticketId comme prop requis
 const props = defineProps({
   ticketId: {
     type: [Number, String],
@@ -58,10 +58,10 @@ const props = defineProps({
   },
 });
 
-// Reference for the ticket data
+// Référence pour les données du ticket
 const ticket = ref({});
 
-// Fetch ticket data on component mount
+// Récupérer les données du ticket lors du montage du composant
 onMounted(async () => {
   const response = await fetch(`/api/ticket/${props.ticketId}`);
   ticket.value = await response.json();

@@ -49,13 +49,14 @@
   </div>
 </template>
 
+javascript
 <script setup>
 import { computed } from "vue";
 import { format } from "date-fns";
 import { CATEGORIES, PRIORITIES } from "../constants";
 import { ticketOfId } from "../use/useTickets";
 
-// Props definition
+// Définition des props
 const props = defineProps({
   ticketId: {
     type: [Number, String],
@@ -67,15 +68,13 @@ const props = defineProps({
   },
 });
 
-// Ticket data reference
+// Référence aux données du ticket
 const ticket = computed(() => ticketOfId.value(props.ticketId));
-console.log("tickets", ticket.value);
-// Function to format date and time
 
+// Fonction pour formater la date et l'heure
 function formatDate(isoDate) {
   if (!isoDate) return "";
   return format(new Date(isoDate), "dd/MM/yyyy HH:mm");
 }
-
-// const ticket = ticketOfId.value(props.ticketId) // 2eme solution pour le code dessus voir dans use la fonction ticketOfId
 </script>
+

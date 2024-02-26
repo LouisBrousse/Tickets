@@ -1,13 +1,16 @@
 <template>
+  <!-- Barre de navigation -->
   <div class="relative bg-slate-900 flex justify-between p-2">
     <!-- Bouton d'icône pour afficher le menu -->
     <button @click="toggleMenu" class="text-gray-200 focus:outline-none">
+      <!-- Icône du menu -->
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-8 w-8"
         viewBox="0 0 20 20"
         fill="currentColor"
       >
+        <!-- Symbole du menu -->
         <path
           fill-rule="evenodd"
           d="M3 12a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0-5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -16,17 +19,23 @@
       </svg>
     </button>
 
+    <!-- Affichage du nom de l'utilisateur si connecté -->
     <span v-if="isLogin" class="mr-2 text-gray-200">User : {{ user }}</span>
+
     <!-- Section de déconnexion -->
     <div class="logoutbutton">
       <div v-if="isLogin">
+        <!-- Bouton de déconnexion -->
         <button @click="logout" class="flex items-center">
-          <span class="mr-2 text-gray-200">Log out</span>
+          <!-- Texte du bouton -->
+          <span class="mr-2 text-gray-200">Déconnexion</span>
+          <!-- Icône de déconnexion -->
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-8 w-8 text-gray-200 logout"
             viewBox="0 0 20 20"
           >
+            <!-- Icône de déconnexion -->
             <g id="layer1">
               <path
                 d="M 0 1 L 0 20 L 12 20 L 12 16 L 11 16 L 11 19 L 1 19 L 1 2 L 11 2 L 11 5 L 12 5 L 12 1 L 0 1 z M 15 7 L 18 10 L 5 10 L 5 11 L 18 11 L 15 14 L 16.5 14 L 20 10.5 L 16.5 7 L 15 7 z "
@@ -42,13 +51,17 @@
         </button>
       </div>
       <div v-else>
+        <!-- Bouton de connexion -->
         <button @click="route2signin" class="flex items-center">
-          <span class="mr-2 text-gray-200">Sign in</span>
+          <!-- Texte du bouton -->
+          <span class="mr-2 text-gray-200">Connexion</span>
+          <!-- Icône de connexion -->
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-8 w-8 text-gray-200 login"
             viewBox="0 0 20 20"
           >
+            <!-- Icône de connexion -->
             <g id="layer1">
               <path
                 d="M 8 1 L 8 5 L 9 5 L 9 2 L 19 2 L 19 19 L 9 19 L 9 16 L 8 16 L 8 20 L 20 20 L 20 1 L 8 1 z M 10 7 L 13 10 L 0 10 L 0 11 L 13 11 L 10 14 L 11.5 14 L 15 10.5 L 11.5 7 L 10 7 z "
@@ -84,7 +97,7 @@
             @click="route2home"
             class="cursor-pointer px-4 py-2 text-white hover:bg-slate-700 rounded-lg"
           >
-            Home
+            Accueil
           </li>
           <li
             @click="route2tickets"
@@ -96,13 +109,13 @@
             @click="route2form"
             class="cursor-pointer px-4 py-2 text-white hover:bg-slate-700 rounded-lg"
           >
-            Ticket Form
+            Formulaire de ticket
           </li>
           <li
             @click="route2signin"
             class="cursor-pointer px-4 py-2 text-white hover:bg-slate-700 rounded-lg"
           >
-            Sign In
+            Connexion
           </li>
           <!-- Ajoutez d'autres liens ici -->
         </ul>
@@ -117,16 +130,15 @@ import { ref } from "vue";
 import { vOnClickOutside } from "@vueuse/components";
 import { getLoggedCookie } from "../_helper/cookie.js";
 
+// Variables réactives
 const showMenu = ref(false);
 const isLogin = ref(getLoggedCookie()); // Détermine si l'utilisateur est connecté ou non
 const user = ref(localStorage.getItem("username"));
 
+// Fonctions
 const toggleMenu = () => {
-  if (showMenu.value === false) {
-    showMenu.value = true;
-  } else {
-    showMenu.value = false;
-  }
+  // Affichage ou masquage du menu
+  showMenu.value = !showMenu.value;
 };
 
 const logout = async () => {
@@ -157,26 +169,32 @@ const logout = async () => {
 };
 
 const hideMenu = () => {
+  // Masquage du menu
   showMenu.value = false;
 };
 
 const route2home = () => {
+  // Redirection vers la page d'accueil
   router.push(`/`);
 };
 
 const route2tickets = () => {
+  // Redirection vers la page des tickets
   router.push(`/tickets`);
 };
 
 const route2form = () => {
+  // Redirection vers le formulaire de ticket
   router.push(`/ticketForm`);
 };
 
 const route2signin = () => {
+  // Redirection vers la page de connexion
   router.push(`/signin`);
 };
 
 const route2admin = () => {
+  // Redirection vers la page d'administration
   router.push(`/admin`);
 };
 </script>

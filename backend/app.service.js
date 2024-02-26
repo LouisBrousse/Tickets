@@ -49,7 +49,89 @@ export async function getTicket(req, res) {
         });
         res.json(ticket);
     } else if (userPermissions["read-ticket"] === req.user.user) { 
-        // Si l'utilisateur est autorisé à lire le ticket
+        // Si l'utilisateur est autorisé à lire le ticketimport { prisma } from "./prisma/prisma.singleton.js";
+
+// Fonction pour obtenir une liste de tickets en fonction des autorisations de l'utilisateur
+export async function getTicketsList(req, res) {
+    try {
+        const userPermissions = req.user.permissions;
+
+        // Vérifie les autorisations de l'utilisateur pour déterminer quels tickets récupérer
+        if (userPermissions["read-list"] === "all") {
+            // Récupère tous les tickets si l'utilisateur a la permission de tout lire
+            const tickets = await prisma.ticket.findMany();
+            res.json(tickets);
+        } else if (userPermissions["read-list"] === req.user.user) {
+            // Récupère les tickets appartenant à l'utilisateur connecté
+            const tickets = await prisma.ticket.findMany({
+                where: {
+                    email: req.user.user,
+                }, 
+            });
+            res.json(tickets); 
+        } else {
+            // Renvoie une erreur si l'utilisateur n'a pas les permissions suffisantes
+            res.status(403).json({
+                status: "error",
+                message: "Interdit : Permissions insuffisantes",
+                permissions: userPermissions,
+            });
+        }
+    } catch (error) {
+        // Gère les erreurs qui se produisent lors de la récupération des tickets
+        console.error("Erreur lors de la récupération des tickets :", error);
+        res.status(500).json({ status: "error", message: "Erreur interne du serveur" });
+    }
+}
+  
+// Fonction pour obtenir les détails d'un ticket spécifique
+export async function getTicket(req, res) {
+    const userPermissions = req.user.permissions;
+    if (userPermissions["read-ticket"] === "all") {
+        // Récupère le ticket si l'utilisateur a la permission de tout lire
+        const objectId = parseInt(req.params.id); 
+        const ticket = await prisma.ticket.findUnique({
+            where: { id: objectId },
+        });
+        res.json(ticket);
+    } else if (userPermissions["read-ticket"] === req.user.user) { 
+        // Récupère le ticket si l'utilisateur a la permission de lire ses propres tickets
+        const objectId = parseInt(req.params.id); 
+        const ticket = await prisma.ticket.findUnique({
+            where: { id: objectId },
+        });
+        res.json(ticket);
+    } else {
+        // Renvoie une erreur si l'utilisateur n'a pas les permissions suffisantes
+        res.status(403).json({
+            status: "error",
+            message: "Interdit : Permissions insuffisantes",
+        });
+    } 
+}
+
+// Fonction pour créer un nouveau ticket
+export async function createTicket(req, res) {
+    const userPermissions = req.user.permissions;
+    const requiredPermission = userPermissions.isAdmin ? "all" : "none";
+
+    // Vérifie les autorisations de l'utilisateur pour déterminer s'il peut créer un ticket
+    if (userPermissions["write-ticket"] === requiredPermission) {
+        let data = req.body;
+        // Crée le nouveau ticket
+        const newTicket = await prisma.ticket.create({
+            data: data,
+        });
+        res.send(newTicket);
+    } else {
+        // Renvoie une erreur si l'utilisateur n'a pas les permissions suffisantes
+        res.status(403).json({
+            status: "error",
+            message: "Interdit : Permissions insuffisantes",
+        });
+    }
+}
+
         const objectId = parseInt(req.params.id); 
 
         const ticket = await prisma.ticket.findUnique({

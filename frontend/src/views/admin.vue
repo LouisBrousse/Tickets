@@ -44,16 +44,23 @@ import { ref } from "vue";
 import Menu from "../components/Menu.vue";
 import { deleteDb } from "../use/useTickets";
 
+// Référence réactive pour l'e-mail de l'utilisateur à supprimer
 const email = ref("");
 
+// Indicateur réactif pour afficher ou masquer la section de suppression d'utilisateur
 const showEffaceUser = ref(false);
+
+// Message de retour après la suppression d'utilisateur
 const effacerUserMessage = ref("");
 
+// Fonction pour basculer l'affichage de la section de suppression d'utilisateur
 const toggleEffaceUser = () => {
   showEffaceUser.value = !showEffaceUser.value;
 };
 
+// Fonction pour supprimer un utilisateur
 const effacerUser = async () => {
+  // Envoi d'une requête DELETE à l'API pour supprimer l'utilisateur
   const response = await fetch("api/deleteUser", {
     method: "DELETE",
     headers: {
@@ -62,8 +69,10 @@ const effacerUser = async () => {
     body: JSON.stringify({ email: email.value }),
   });
 
+  // Analyse de la réponse pour obtenir les données de retour
   const data = await response.json();
 
+  // Gestion de la réponse de l'API
   if (data.status === "success") {
     console.log("User deleted", data);
     effacerUserMessage.value = "Utilisateur effacé avec succès.";
@@ -74,7 +83,8 @@ const effacerUser = async () => {
   }
 };
 
+// Fonction pour effacer la base de données des tickets
 const clearDB = async () => {
-  const response = await deleteDb();
+  await deleteDb();
 };
 </script>

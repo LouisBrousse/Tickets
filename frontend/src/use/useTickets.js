@@ -1,60 +1,53 @@
 import { useLocalStorage } from "@vueuse/core";
 import { ref, computed } from "vue";
 
-// Reactive reference to store ticket data based on ticket IDs
+// Référence réactive pour stocker les données des tickets en fonction de leurs IDs
 const id2ticket = useLocalStorage("id2ticket", {});
 
-//Part 7
+// Indication réactive pour savoir si les données de la liste des tickets sont prêtes
 const ticketListComplete = ref(false);
 
-// Reactive reference to indicate whether the ticket list data is ready
-
-// Computed property to get all tickets
+// Propriété calculée pour obtenir tous les tickets
 export const allTickets = computed(() => {
-  console.log("ticketListComplete.value : ", ticketListComplete.value);
-
-  // If the ticket list data is ready, return all tickets as an array
+  // Si les données de la liste des tickets sont prêtes, retourner tous les tickets sous forme de tableau
   if (ticketListComplete.value) {
-    // console.log('test')
     return Object.values(id2ticket.value);
   }
 
-  // If the ticket list data is not ready, fetch it from the API
+  // Si les données de la liste des tickets ne sont pas prêtes, les récupérer depuis l'API
   fetch("/api/ticket")
     .then((response) => response.json())
     .then((ticketlist) => {
-      // Populate the id2ticket reference with fetched ticket data
+      // Remplir la référence id2ticket avec les données des tickets récupérées
       for (const ticket of ticketlist) {
         id2ticket.value[ticket.id] = ticket;
       }
-      // Set ticketListComplete to true to indicate that the data is ready
+      // Définir ticketListComplete à true pour indiquer que les données sont prêtes
       ticketListComplete.value = true;
     });
 
-  // Return null while waiting for the data to be fetched
+  // Retourner null en attendant que les données soient récupérées
   return [];
 });
 
-// Function to asynchronously fetch ticket data by ticket ID
+// Fonction pour récupérer de manière asynchrone les données d'un ticket en fonction de son ID
 export async function asyncTicket(ticketid) {
-  // If ticket data already exists in the reference, return it
+  // Si les données du ticket existent déjà dans la référence, les retourner
   if (id2ticket.value[ticketid]) {
-    console.log('le ticket est dans id2ticket')
     return id2ticket.value[ticketid];
   } else {
-    console.log('le ticket PAS dans id2ticket')
-    // Otherwise, fetch the ticket data from the API
+    // Sinon, récupérer les données du ticket depuis l'API
     const response = await fetch(`/api/ticket/${ticketid}`);
     const ticket = await response.json();
-    // Store the fetched ticket data in the reference for future use
+    // Stocker les données du ticket récupérées dans la référence pour une utilisation future
     id2ticket.value[ticket.id] = ticket;
-  } 
+  }
   return id2ticket.value[ticketid];
 }
 
+// Fonction pour ajouter un nouveau ticket
 export async function addTicket(formData) {
-  console.log("addTicket");
-  // Send a POST request to the API to create a new ticket
+  // Envoyer une requête POST à l'API pour créer un nouveau ticket
   const response = await fetch("/api/ticket", {
     method: "POST",
     headers: {
@@ -63,19 +56,20 @@ export async function addTicket(formData) {
     body: JSON.stringify(formData.value),
   });
 
-  // Parse the response to get the created ticket data
+  // Parser la réponse pour obtenir les données du ticket créé
   const createdTicket = await response.json();
-  console.log("ticket", createdTicket);
-  // Store the created ticket data in the id2ticket reference for future use
+  // Stocker les données du ticket créé dans la référence id2ticket pour une utilisation future
   id2ticket.value[createdTicket.id] = createdTicket;
 
-  // Return the created ticket data
+  // Retourner les données du ticket créé
   return createdTicket;
 }
 
+// Propriété calculée pour obtenir un ticket en fonction de son ID
 export const ticketOfId = computed(() => (id) => {
   const ticket = id2ticket.value[id];
   if (ticket) return ticket;
+  // Si le ticket n'est pas dans la référence, le récupérer depuis l'API
   fetch(`/api/ticket/${id}`)
     .then((response) => response.json())
     .then((ticket) => {
@@ -83,27 +77,25 @@ export const ticketOfId = computed(() => (id) => {
     });
 });
 
-// fonction de triage
+// Propriété calculée pour obtenir tous les tickets triés par date de création
 export const allSortedTicket = computed(() => {
   return allTickets.value.sort((ticket1, ticket2) => {
-    //voir la
-    //return new Date (ticket1.created_at) - new Date (ticket2.created_at)
     if (ticket1.created_at < ticket2.created_at) return -1;
     if (ticket1.created_at > ticket2.created_at) return 1;
     return 0;
   });
 });
 
+// Fonction pour effacer la base de données des tickets
 export const deleteDb = async () => {
   const response = await fetch("/api/deleteDB", {
-    method: "DELETE", // Spécifiez la méthode DELETE
+    method: "DELETE",
   });
 
   if (response.status === 200) {
-    console.log("DBéffacée");
-    // Effacer localStorage
+    // Effacer le localStorage
     localStorage.removeItem("id2ticket");
   } else {
-    console.error("Effacement abordé"); // Afficher un message d'erreur
+    console.error("Effacement annulé");
   }
 };

@@ -75,13 +75,13 @@ import { format } from "date-fns";
 import { CATEGORIES, PRIORITIES } from "../constants";
 import { asyncTicket } from "../use/useTickets";
 
-// Function to format date and time
+// Fonction pour formater la date et l'heure
 const formatDateTime = (dateTime) => {
   if (!dateTime) return "";
   return format(new Date(dateTime), "dd/MM/yyyy HH:mm:ss");
 };
 
-// Props definition
+// Définition des props
 const props = defineProps({
   ticketId: {
     type: [Number, String],
@@ -89,22 +89,20 @@ const props = defineProps({
   },
 });
  
-// Ticket data reference
+// Référence aux données du ticket
 const ticket = ref({});
-console.log("detail du ticket",ticket.value)
-// Fetch ticket details on component mount
+
+// Récupération des détails du ticket lors du montage du composant
 onMounted(async () => {
   ticket.value = await asyncTicket(props.ticketId);
-  console.log("ticket detail", ticket.value);
 });  
 
-// Watch for changes in ticketId prop and update ticket details
+// Surveillance des changements dans la prop ticketId et mise à jour des détails du ticket
 watch(
   () => props.ticketId,
   async () => {
     const response = await fetch(`/api/ticket/${props.ticketId}`);
     ticket.value = await response.json();
-    console.log("ticket : ", ticket.value);
   }
 );
 </script>

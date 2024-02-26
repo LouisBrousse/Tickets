@@ -62,21 +62,30 @@ import { ref, computed } from "vue";
 import Menu from "../components/Menu.vue";
 import router from "../router";
 
+// Références réactives pour les champs du formulaire et le message d'erreur
 const email = ref("");
 const password = ref("");
 const isAdmin = ref(false);
 const errorMessage = ref("");
+
+// Expression régulière pour la validation de l'e-mail
 let regEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Propriété calculée pour valider l'e-mail
 const isEmailValid = computed(() => regEmail.test(email.value) && email.value);
 
+// Propriété calculée pour valider le mot de passe
 const isPasswordValid = computed(() => password.value.length > 0);
 
+// Propriété calculée pour valider le formulaire
 const isFormValid = computed(() => isEmailValid.value && isPasswordValid.value);
 
+// Fonction pour soumettre le formulaire d'inscription
 const submitForm = async () => {
+  // Récupérer la valeur de isAdmin
   const isAdminValue = isAdmin.value;
-  // Envoyer les données de connexion dans l'en-tête de la requête
+
+  // Envoyer les données de formulaire à l'API pour l'enregistrement
   const response = await fetch("/api/register", {
     method: "POST",
     headers: {
@@ -89,18 +98,19 @@ const submitForm = async () => {
     }),
   });
 
-  // Récupérer la réponse du serveur
+  // Récupérer la réponse de l'API
   const data = await response.json();
 
-  // Gérer la réponse
+  // Gérer la réponse de l'API
   if (data.status === "success") {
     console.log("User created", data);
-    router.push("/signin");
+    router.push("/signin"); // Rediriger vers la page de connexion après l'inscription réussie
   } else {
     console.error("Register failed:", data.message);
-    errorMessage.value = data.message;
+    errorMessage.value = data.message; // Afficher le message d'erreur en cas d'échec de l'inscription
   }
 };
 
+// Fonction pour rediriger vers la page de connexion
 const register2SignIn = () => router.push("/signin");
 </script>

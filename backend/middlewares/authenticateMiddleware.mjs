@@ -2,19 +2,20 @@ import jwt from "jsonwebtoken";
 import { res401 } from "../res401.js";
 import { prisma } from "../prisma/prisma.singleton.js";
 
-// Middleware d'authentification
+
 export async function authenticateMiddleware(req, res, next) {
-    const token = req.cookies.access_token; // Récupération du jeton d'accès depuis les cookies de la requête
+    // Récupération du jeton d'accès depuis les cookies de la requête
+    const token = req.cookies.access_token;
 
     try {
+        // Vérification de la présence du jeton d'accès
         if (!token) {
-            // Si aucun jeton d'accès n'est fourni dans les cookies, renvoyer une erreur d'authentification
             throw new Error("Unauthorized: Missing access token");
         }
 
+        // Récupération de la clé de signature depuis les variables d'environnement
         const key = process.env.SIGNING_KEY;
         if (!key) {
-            // Vérifiez si la clé de signature est définie dans les variables d'environnement
             throw new Error("No signing key defined");
         }
 
@@ -31,11 +32,11 @@ export async function authenticateMiddleware(req, res, next) {
             where: {
                 email: decoded.user,
             },
-        }); 
+        });
 
         if (!dbUser) {
             throw new Error("Unauthorized: Unknown user");
-        } 
+        }
 
         // Création du payload contenant les informations de l'utilisateur
         const payload = {
@@ -46,15 +47,17 @@ export async function authenticateMiddleware(req, res, next) {
                 "read-ticket": dbUser.isAdmin ? "all" : dbUser.email,
                 "write-ticket": dbUser.isAdmin ? "all" : "none",
             },
-        }; 
-        // console.log('payload :',payload)
-        // Stockage des informations de l'utilisateur dans la requête pour une utilisation ultérieure
-        req.user = payload;  
+        };
 
-        next(); // Appel à la fonction next() pour passer au middleware suivant
-    } catch (error) { 
-        console.error("Erreur de vérification du token:", error);
+        // Stockage des informations de l'utilisateur dans la requête pour une utilisation ultérieure
+        req.user = payload;
+
+        // Appel à la fonction next() pour passer au middleware suivant
+        next();
+    } catch (error) {
+        // Gestion des erreurs de vérification du token
+        console.error("Token verification error:", error);
+        // Renvoi d'une réponse d'erreur 401 avec le message approprié
         return res401(res, error.message);
-    } 
-}  
- 
+    }
+}

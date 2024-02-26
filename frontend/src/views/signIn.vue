@@ -47,14 +47,15 @@
 import { ref } from "vue";
 import Menu from "../components/Menu.vue";
 import router from "../router";
-// import bcrypt from "bcryptjs";
 
+// Références réactives pour les champs du formulaire et le message d'erreur
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
 
+// Fonction pour soumettre le formulaire de connexion
 const submitForm = async () => {
-  // Envoyer les données de connexion dans l'en-tête de la requête
+  // Envoyer les données de connexion à l'API pour authentification
   const response = await fetch("/api/signin", {
     method: "POST",
     headers: {
@@ -66,19 +67,21 @@ const submitForm = async () => {
     }),
   });
 
-  // Récupérer la réponse du serveur
+  // Récupérer la réponse de l'API
   const data = await response.json();
 
-  // Gérer la réponse
+  // Gérer la réponse de l'API
   if (data.status === "success") {
+    // Enregistrer le nom d'utilisateur dans le localStorage
     localStorage.setItem("username", data.user);
     console.log("Login successful");
-    router.push("/tickets");
+    router.push("/tickets"); // Rediriger vers la page des tickets après une connexion réussie
   } else {
     console.error("Login failed:", data.message);
-    errorMessage.value = data.message;
+    errorMessage.value = data.message; // Afficher le message d'erreur en cas d'échec de connexion
   }
 };
- 
+
+// Fonction pour rediriger vers la page d'inscription
 const signIn2Register = () => router.push("/register");
 </script>
